@@ -4,24 +4,50 @@ import com.barbersync.barbersync_api.Usuarios.classes.Cliente;
 import com.barbersync.barbersync_api.Usuarios.classes.Usuario;
 import com.barbersync.barbersync_api.Usuarios.dtos.DadosCadastroCliente;
 import com.barbersync.barbersync_api.Usuarios.dtos.Roles;
-import jakarta.transaction.Transactional;
+import com.barbersync.barbersync_api.Usuarios.repository.ClienteRepository;
+import com.barbersync.barbersync_api.Usuarios.repository.UsuariosRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Objects;
 
 @Service
 public class ClienteService {
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private UsuariosRepository usuariosRepository;
+
+    @Autowired
+    private ClienteRepository clienteRepository;
+
     @Transactional
-    public void cadastrarUsuarioCliente(DadosCadastroCliente dados){
-        Usuario usuario = new Usuario();
+    public void cadastrarUsuarioCliente(DadosCadastroCliente dados) throws Exception {
+        try {
+            Usuario usuario = new Usuario();
 
-        usuario.setNome(dados.nome());
-        usuario.setEmail(dados.email());
-        usuario.setSenha(dados.senha());
-        usuario.setRole(Roles.CLIENTE);
+            usuario.setNome(dados.nome());
+            usuario.setEmail(dados.email());
+            usuario.setSenha(passwordEncoder.encode(dados.senha()));
+            usuario.setRole(Roles.CLIENTE);
 
-        Cliente cliente = new Cliente();
+            Cliente cliente = new Cliente();
 
-        cliente.setTelefone(dados.telefone());
-        cliente.setUsuario(usuario);
+            if (Objects.equals(dados.telefone(), "")) {
+                cliente.setTelefone("");
+            } else {
+                cliente.setTelefone(dados.telefone());
+            }
+            cliente.setUsuario(usuario);
+
+            usuariosRepository.save(usuario);
+            clienteRepository.save(cliente);
+        } catch (Exception e) {
+            throw new Exception("Dados faltantes ou incorretos!");
+        }
     }
 }

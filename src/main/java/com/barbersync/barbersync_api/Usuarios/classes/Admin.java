@@ -1,4 +1,26 @@
 package com.barbersync.barbersync_api.Usuarios.classes;
 
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Table(name = "admin")
+@Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@Setter
+@Getter
 public class Admin {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @OneToOne
+    @JoinColumn(name = "usuario_id")
+    private Usuario usuario;
+
+    private int adminKey;
 }
