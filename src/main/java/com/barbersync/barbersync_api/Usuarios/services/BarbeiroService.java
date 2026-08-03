@@ -2,6 +2,7 @@ package com.barbersync.barbersync_api.Usuarios.services;
 
 import com.barbersync.barbersync_api.Usuarios.classes.Barbeiro;
 import com.barbersync.barbersync_api.Usuarios.classes.Usuario;
+import com.barbersync.barbersync_api.Usuarios.dtos.DadosAlteracaoBarbeiro;
 import com.barbersync.barbersync_api.Usuarios.dtos.DadosCadastroBarbeiro;
 import com.barbersync.barbersync_api.Usuarios.dtos.DadosCadastroCliente;
 import com.barbersync.barbersync_api.Usuarios.dtos.Roles;
@@ -26,7 +27,7 @@ public class BarbeiroService {
     private BarbeiroRepository barbeiroRepository;
 
     @Transactional
-    public void cadastrarUsuarioBarbeiro(@Valid DadosCadastroBarbeiro dados) throws Exception {
+    public Barbeiro cadastrarUsuarioBarbeiro(@Valid DadosCadastroBarbeiro dados) throws Exception {
         try {
             Usuario usuario = new Usuario();
             usuario.setNome(dados.nome());
@@ -41,9 +42,38 @@ public class BarbeiroService {
 
             usuariosRepository.save(usuario);
             barbeiroRepository.save(barbeiro);
+
+            return barbeiro;
         } catch (Exception e) {
             throw new Exception("Dados faltantes ou incorretos!");
         }
+    }
 
+    @Transactional
+    public Barbeiro mudarBarbeiro(@Valid DadosAlteracaoBarbeiro dados) throws Exception {
+        try {
+            var barbeiro = barbeiroRepository.getReferenceById(dados.id());
+
+            if(dados.nome() != null){
+                barbeiro.getUsuario().setNome(dados.nome());
+            }
+
+            if(dados.email() != null){
+                barbeiro.getUsuario().setEmail(dados.email());
+            }
+
+            if(dados.telefone() != null){
+                barbeiro.setTelefone(dados.telefone());
+            }
+
+            if(dados.cpf() != null){
+                barbeiro.setCpf(dados.cpf());
+            }
+
+            barbeiroRepository.save(barbeiro);
+            return barbeiro;
+        } catch (Exception e) {
+            throw new Exception("Dados incorretos - Não foi possível alterar o usuário");
+        }
     }
 }

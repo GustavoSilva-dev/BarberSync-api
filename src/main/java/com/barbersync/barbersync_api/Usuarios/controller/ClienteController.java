@@ -1,7 +1,7 @@
 package com.barbersync.barbersync_api.Usuarios.controller;
 
 import com.barbersync.barbersync_api.Usuarios.dtos.DadosCadastroCliente;
-import com.barbersync.barbersync_api.Usuarios.dtos.DadosRetornoUsuario;
+import com.barbersync.barbersync_api.Usuarios.dtos.DadosRetornoCliente;
 import com.barbersync.barbersync_api.Usuarios.services.ClienteService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +24,6 @@ public class ClienteController {
     public ResponseEntity registrarCliente(@RequestBody @Valid DadosCadastroCliente dados) throws Exception {
         clienteService.cadastrarUsuarioCliente(dados);
 
-        return ResponseEntity.ok().body(new DadosRetornoUsuario(dados));
+        return ResponseEntity.ok().body(new DadosRetornoCliente(dados));
     }
 }
