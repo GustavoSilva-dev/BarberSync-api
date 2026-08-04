@@ -23,7 +23,7 @@ public class SecurityConfigurations {
                 .authorizeHttpRequests(req -> {
                     req.requestMatchers(HttpMethod.POST, "/auth/**").permitAll();
                     req.requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll();
-                    req.anyRequest().authenticated();
+                    req.anyRequest().permitAll();
                 })
                 .build();
     }
