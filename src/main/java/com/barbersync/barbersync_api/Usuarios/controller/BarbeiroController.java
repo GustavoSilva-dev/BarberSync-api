@@ -34,7 +34,7 @@ public class BarbeiroController {
         return ResponseEntity.created(uri).body(new DadosRetornoBarbeiro(barbeiro));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/barbeiros/{id}")
     @Transactional
     public ResponseEntity excluirBarbeiro(@PathVariable Long id){
         repository.deleteById(id);
@@ -43,7 +43,7 @@ public class BarbeiroController {
     }
 
     @GetMapping("/barbeiros")
-    public Page<DadosRetornoBarbeiro> listarBarbeiros(@PageableDefault(size=10, sort="nome") Pageable paginacao){
+    public Page<DadosRetornoBarbeiro> listarBarbeiros(@PageableDefault(size=10, sort="usuario.nome") Pageable paginacao){
         return repository.findAll(paginacao).map(DadosRetornoBarbeiro::new);
     }
 

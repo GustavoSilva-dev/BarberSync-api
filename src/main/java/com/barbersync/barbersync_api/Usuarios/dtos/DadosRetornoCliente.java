@@ -1,5 +1,6 @@
 package com.barbersync.barbersync_api.Usuarios.dtos;
 
+import com.barbersync.barbersync_api.Usuarios.classes.Cliente;
 import jakarta.validation.Valid;
 
 public record DadosRetornoCliente(
@@ -8,7 +9,7 @@ public record DadosRetornoCliente(
         String telefone,
         Roles acesso
 ) {
-    public DadosRetornoCliente(@Valid DadosCadastroCliente dados) {
-        this(dados.nome(), dados.email(), dados.telefone(), Roles.CLIENTE);
+    public DadosRetornoCliente(Cliente cliente) {
+        this(cliente.getUsuario().getNome(), cliente.getUsuario().getEmail(), cliente.getTelefone(), Roles.CLIENTE);
     }
 }

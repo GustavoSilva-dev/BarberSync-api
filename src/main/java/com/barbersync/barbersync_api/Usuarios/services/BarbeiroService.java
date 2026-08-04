@@ -53,13 +53,14 @@ public class BarbeiroService {
     public Barbeiro mudarBarbeiro(@Valid DadosAlteracaoBarbeiro dados) throws Exception {
         try {
             var barbeiro = barbeiroRepository.getReferenceById(dados.id());
+            var usuario = usuariosRepository.getReferenceById(barbeiro.getUsuario().getId());
 
             if(dados.nome() != null){
-                barbeiro.getUsuario().setNome(dados.nome());
+                usuario.setNome(dados.nome());
             }
 
             if(dados.email() != null){
-                barbeiro.getUsuario().setEmail(dados.email());
+                usuario.setEmail(dados.email());
             }
 
             if(dados.telefone() != null){
@@ -71,6 +72,7 @@ public class BarbeiroService {
             }
 
             barbeiroRepository.save(barbeiro);
+            usuariosRepository.save(usuario);
             return barbeiro;
         } catch (Exception e) {
             throw new Exception("Dados incorretos - Não foi possível alterar o usuário");
