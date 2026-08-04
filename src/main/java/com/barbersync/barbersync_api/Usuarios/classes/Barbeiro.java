@@ -1,5 +1,6 @@
 package com.barbersync.barbersync_api.Usuarios.classes;
 
+import com.barbersync.barbersync_api.Usuarios.dtos.StatusBarbeiro;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,4 +25,7 @@ public class Barbeiro {
 
     private String cpf;
     private String telefone;
+
+    @Enumerated(EnumType.STRING)
+    private StatusBarbeiro status;
 }

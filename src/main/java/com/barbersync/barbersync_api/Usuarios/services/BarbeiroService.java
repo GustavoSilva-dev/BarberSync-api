@@ -2,10 +2,7 @@ package com.barbersync.barbersync_api.Usuarios.services;
 
 import com.barbersync.barbersync_api.Usuarios.classes.Barbeiro;
 import com.barbersync.barbersync_api.Usuarios.classes.Usuario;
-import com.barbersync.barbersync_api.Usuarios.dtos.DadosAlteracaoBarbeiro;
-import com.barbersync.barbersync_api.Usuarios.dtos.DadosCadastroBarbeiro;
-import com.barbersync.barbersync_api.Usuarios.dtos.DadosCadastroCliente;
-import com.barbersync.barbersync_api.Usuarios.dtos.Roles;
+import com.barbersync.barbersync_api.Usuarios.dtos.*;
 import com.barbersync.barbersync_api.Usuarios.repository.BarbeiroRepository;
 import com.barbersync.barbersync_api.Usuarios.repository.UsuariosRepository;
 import jakarta.validation.Valid;
@@ -39,6 +36,7 @@ public class BarbeiroService {
             barbeiro.setCpf(dados.cpf());
             barbeiro.setTelefone(dados.cpf());
             barbeiro.setUsuario(usuario);
+            barbeiro.setStatus(StatusBarbeiro.ATIVO);
 
             usuariosRepository.save(usuario);
             barbeiroRepository.save(barbeiro);
@@ -77,5 +75,13 @@ public class BarbeiroService {
         } catch (Exception e) {
             throw new Exception("Dados incorretos - Não foi possível alterar o usuário");
         }
+    }
+
+    @Transactional
+    public void desativarBarbeiro(Long id) {
+        var barbeiro = barbeiroRepository.getReferenceById(id);
+
+        barbeiro.setStatus(StatusBarbeiro.DESATIVO);
+        barbeiroRepository.save(barbeiro);
     }
 }
