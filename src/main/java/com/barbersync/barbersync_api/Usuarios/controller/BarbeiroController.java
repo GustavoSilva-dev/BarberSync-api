@@ -37,14 +37,14 @@ public class BarbeiroController {
     @DeleteMapping("/barbeiros/{id}")
     @Transactional
     public ResponseEntity excluirBarbeiro(@PathVariable Long id){
-        repository.deleteById(id);
+        barbeiroService.desativarBarbeiro(id);
 
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/barbeiros")
     public Page<DadosRetornoBarbeiro> listarBarbeiros(@PageableDefault(size=10, sort="usuario.nome") Pageable paginacao){
-        return repository.findAll(paginacao).map(DadosRetornoBarbeiro::new);
+        return repository.findAllByAtivo(paginacao).map(DadosRetornoBarbeiro::new);
     }
 
     @PutMapping("/alterar-barbeiro")
