@@ -22,13 +22,13 @@ public class AuthenticationService implements UserDetailsService {
     private ClienteRepository clienteRepository;
 
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        var admin = adminRepository.findByEmail(email);
+        var admin = adminRepository.findByUsuarioEmail(email);
         if (admin != null) return admin;
 
-        var cliente = clienteRepository.findByEmail(email);
+        var cliente = clienteRepository.findByUsuarioEmail(email);
         if (cliente != null) return cliente;
 
-        var barbeiro = barbeiroRepository.findByEmail(email);
+        var barbeiro = barbeiroRepository.findByUsuarioEmail(email);
         if (barbeiro != null) return barbeiro;
 
         throw new UsernameNotFoundException("Usuário não encontrado: " + email);

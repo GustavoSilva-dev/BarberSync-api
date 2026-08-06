@@ -37,21 +37,21 @@ public class SecurityFilter extends OncePerRequestFilter {
         if (token != null){
             var subject = tokenService.coletarSubject(token);
 
-            var admin = adminRepository.findByEmail(subject);
+            var admin = adminRepository.findByUsuarioEmail(subject);
             if (admin != null ) {
                 var authentication = new UsernamePasswordAuthenticationToken(admin, null, admin.getAuthorities());
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
 
-            var cliente = clienteRepository.findByEmail(subject);
+            var cliente = clienteRepository.findByUsuarioEmail(subject);
             if (cliente != null){
                 var authentication = new UsernamePasswordAuthenticationToken(admin, null, cliente.getAuthorities());
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
 
-            var barbeiro = barbeiroRepository.findByEmail(subject);
+            var barbeiro = barbeiroRepository.findByUsuarioEmail(subject);
             if (barbeiro != null){
                 var authentication = new UsernamePasswordAuthenticationToken(admin, null, barbeiro.getAuthorities());
 

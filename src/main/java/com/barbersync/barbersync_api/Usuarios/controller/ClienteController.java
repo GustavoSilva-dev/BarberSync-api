@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/clientes")
 public class ClienteController {
 
     @Autowired
@@ -25,7 +25,7 @@ public class ClienteController {
     @Autowired
     private ClienteService clienteService;
 
-    @PostMapping("/registrar-cliente")
+    @PostMapping
     @Transactional
     public ResponseEntity registrarCliente(@RequestBody @Valid DadosCadastroCliente dados, UriComponentsBuilder uriBuilder) throws Exception {
         var cliente = clienteService.cadastrarUsuarioCliente(dados);
@@ -34,12 +34,12 @@ public class ClienteController {
         return ResponseEntity.created(uri).body(new DadosRetornoCliente(cliente));
     }
 
-    @GetMapping("/clientes")
+    @GetMapping
     public Page<DadosRetornoCliente> listarClientes(@PageableDefault(size = 10, sort="usuario.nome") Pageable paginacao) {
         return repository.findAll(paginacao).map(DadosRetornoCliente::new);
     }
 
-    @DeleteMapping("/clientes/{id}")
+    @DeleteMapping("/{id}")
     @Transactional
     public ResponseEntity deletarCliente(@PathVariable Long id){
         repository.deleteById(id);
@@ -47,7 +47,7 @@ public class ClienteController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/alterar-cliente")
+    @PutMapping
     @Transactional
     public ResponseEntity alterarCliente(@RequestBody @Valid DadosAlteracaoCliente dados) throws Exception {
         var cliente = clienteService.alterarUsuarioCliente(dados);
