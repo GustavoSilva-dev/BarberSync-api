@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/barbeiros")
 public class BarbeiroController {
 
     @Autowired
@@ -25,7 +25,7 @@ public class BarbeiroController {
     @Autowired
     private BarbeiroRepository repository;
 
-    @PostMapping("/registrar-barbeiro")
+    @PostMapping
     @Transactional
     public ResponseEntity registrarBarbeiro(@RequestBody @Valid DadosCadastroBarbeiro dados, UriComponentsBuilder uriBuilder) throws Exception {
         var barbeiro = barbeiroService.cadastrarUsuarioBarbeiro(dados);
@@ -34,7 +34,7 @@ public class BarbeiroController {
         return ResponseEntity.created(uri).body(new DadosRetornoBarbeiro(barbeiro));
     }
 
-    @DeleteMapping("/barbeiros/{id}")
+    @DeleteMapping("/{id}")
     @Transactional
     public ResponseEntity excluirBarbeiro(@PathVariable Long id){
         barbeiroService.desativarBarbeiro(id);
@@ -42,12 +42,12 @@ public class BarbeiroController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/barbeiros")
+    @GetMapping
     public Page<DadosRetornoBarbeiro> listarBarbeiros(@PageableDefault(size=10, sort="usuario.nome") Pageable paginacao){
         return repository.findAllByAtivo(paginacao).map(DadosRetornoBarbeiro::new);
     }
 
-    @PutMapping("/alterar-barbeiro")
+    @PutMapping
     public ResponseEntity alterarBarbeiro(@RequestBody @Valid DadosAlteracaoBarbeiro dados) throws Exception {
         var barbeiro = barbeiroService.mudarBarbeiro(dados);
         return ResponseEntity.ok().body(new DadosRetornoBarbeiro(barbeiro));

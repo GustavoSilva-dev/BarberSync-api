@@ -13,5 +13,5 @@ public interface BarbeiroRepository extends JpaRepository<Barbeiro, Long> {
     @Query("SELECT b FROM Barbeiro b WHERE b.status = 'ATIVO'")
     Page<Barbeiro> findAllByAtivo(Pageable paginacao);
 
-    UserDetails findByEmail(String subject);
+    UserDetails findByUsuarioEmail(String email);
 }
