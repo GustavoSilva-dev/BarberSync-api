@@ -1,6 +1,6 @@
 package com.barbersync.barbersync_api.Usuarios.classes;
 
-import com.barbersync.barbersync_api.Usuarios.dtos.StatusBarbeiro;
+import com.barbersync.barbersync_api.Usuarios.dtos.Status;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -34,7 +34,7 @@ public class Barbeiro implements UserDetails {
     private String telefone;
 
     @Enumerated(EnumType.STRING)
-    private StatusBarbeiro status;
+    private Status status;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -53,6 +53,6 @@ public class Barbeiro implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return this.status == StatusBarbeiro.ATIVO;
+        return this.status == Status.ATIVO;
     }
 }

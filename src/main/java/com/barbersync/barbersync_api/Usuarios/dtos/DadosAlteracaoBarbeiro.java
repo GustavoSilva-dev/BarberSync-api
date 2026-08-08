@@ -5,15 +5,15 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
 public record DadosAlteracaoBarbeiro(
-        @NotNull
+        @NotNull(message = "O campo id é obrigatório.")
         Long id,
         String nome,
-        @Email
+        @Email(message = "O e-mail informado deve ser válido, exemplo: usuario@dominio.com.")
         String email,
         String senha,
-        @Pattern(regexp = "^\\d{11}$", message = "O CPF deve conter exatamente 11 dígitos")
+        @Pattern(regexp = "^\\d{11}$", message = "O campo cpf possui um formato inválido.")
         String cpf,
-        @Pattern(regexp = "^\\d{11}$", message = "O telefone deve conter exatamente 11 dígitos")
+        @Pattern(regexp = "^\\d{11}$", message = "O campo telefone possui um formato inválido.")
         String telefone
 ) {
 }

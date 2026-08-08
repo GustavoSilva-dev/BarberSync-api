@@ -1,19 +1,19 @@
 package com.barbersync.barbersync_api.Usuarios.dtos;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.*;
 
 public record DadosCadastroAdmin(
-        @NotBlank
+        @NotBlank(message = "O campo nome é obrigatório.")
         String nome,
-        @NotBlank @Email
+
+        @NotBlank(message = "O campo email é obrigatório.")
+        @Email(message = "O e-mail informado deve ser válido, exemplo: usuario@dominio.com.")
         String email,
-        @NotBlank
+
+        @NotBlank(message = "O campo senha é obrigatório.")
         String senha,
 
-        @NotNull
+        @NotNull(message = "O campo adminKey é obrigatório.")
         int adminKey
 ) {
 }
