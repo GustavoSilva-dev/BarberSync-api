@@ -5,10 +5,13 @@ import com.barbersync.barbersync_api.Usuarios.classes.Usuario;
 import com.barbersync.barbersync_api.Usuarios.dtos.DadosAlteracaoAdmin;
 import com.barbersync.barbersync_api.Usuarios.dtos.DadosCadastroAdmin;
 import com.barbersync.barbersync_api.Usuarios.dtos.Roles;
+import com.barbersync.barbersync_api.Usuarios.dtos.Status;
 import com.barbersync.barbersync_api.Usuarios.repository.AdminRepository;
 import com.barbersync.barbersync_api.Usuarios.repository.UsuariosRepository;
+import com.barbersync.barbersync_api.infra.exception.UsuarioNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +29,7 @@ public class AdminService {
     private AdminRepository adminRepository;
 
     @Transactional
-    public void cadastrarUsuarioAdmin(@Valid DadosCadastroAdmin dados) throws Exception {
+    public Admin cadastrarUsuarioAdmin(@Valid DadosCadastroAdmin dados) throws Exception {
         try {
             Usuario usuario = new Usuario();
             usuario.setNome(dados.nome());
@@ -37,9 +40,10 @@ public class AdminService {
             Admin admin = new Admin();
             admin.setUsuario(usuario);
             admin.setAdminKey(dados.adminKey());
+            admin.setStatus(Status.ATIVO);
 
             usuariosRepository.save(usuario);
-            adminRepository.save(admin);
+            return adminRepository.save(admin);
         } catch (Exception e) {
             throw new Exception("Dados faltantes ou incorretos!");
         }
@@ -48,7 +52,8 @@ public class AdminService {
 
     public void alterarUsuarioAdmin(@Valid DadosAlteracaoAdmin dados) throws Exception {
         try {
-            var admin = adminRepository.getReferenceById(dados.id());
+            var admin = adminRepository.findById(dados.id()).orElseThrow(() -> new UsuarioNotFoundException("Admin não identificado no sistema"));
+
             var usuario = usuariosRepository.getReferenceById(admin.getUsuario().getId());
 
             if (dados.nome() != null){
@@ -71,7 +76,18 @@ public class AdminService {
         }
     }
 
-    public void desativarAdmin(Long id) {
-        var admin = adminRepository.findById(id);
+    public void desativarAdmin(Long id) throws Exception {
+        try {
+            if (adminRepository.countAllByAtivo() > 0){
+                var admin = adminRepository.findById(id).orElseThrow(() -> new UsuarioNotFoundException("Admin não identificado no sistema"));
+
+                admin.setStatus(Status.DESATIVO);
+            } else {
+                throw new Exception("Impossível realizar exclusão: Deve haver no mínimo 1 ADMIN remanescente no sistema");
+            }
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+
     }
 }

@@ -32,10 +32,10 @@ public class SecurityFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        var token = recuperarToken(request);
+        String token = recuperarToken(request);
 
         if (token != null){
-            var subject = tokenService.coletarSubject(token);
+            String subject = tokenService.coletarSubject(token);
 
             var admin = adminRepository.findByUsuarioEmail(subject);
             if (admin != null ) {
@@ -46,14 +46,14 @@ public class SecurityFilter extends OncePerRequestFilter {
 
             var cliente = clienteRepository.findByUsuarioEmail(subject);
             if (cliente != null){
-                var authentication = new UsernamePasswordAuthenticationToken(admin, null, cliente.getAuthorities());
+                var authentication = new UsernamePasswordAuthenticationToken(cliente, null, cliente.getAuthorities());
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
 
             var barbeiro = barbeiroRepository.findByUsuarioEmail(subject);
             if (barbeiro != null){
-                var authentication = new UsernamePasswordAuthenticationToken(admin, null, barbeiro.getAuthorities());
+                var authentication = new UsernamePasswordAuthenticationToken(barbeiro, null, barbeiro.getAuthorities());
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }

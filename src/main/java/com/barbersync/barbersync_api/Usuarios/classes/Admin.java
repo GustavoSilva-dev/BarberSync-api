@@ -1,6 +1,12 @@
 package com.barbersync.barbersync_api.Usuarios.classes;
 
+import com.barbersync.barbersync_api.Usuarios.dtos.DadosCadastroAdmin;
+import com.barbersync.barbersync_api.Usuarios.dtos.Roles;
+import com.barbersync.barbersync_api.Usuarios.dtos.Status;
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,6 +36,9 @@ public class Admin implements UserDetails {
     private Usuario usuario;
 
     private int adminKey;
+
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

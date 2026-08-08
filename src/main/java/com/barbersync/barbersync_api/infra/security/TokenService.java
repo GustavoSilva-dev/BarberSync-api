@@ -18,7 +18,7 @@ import java.time.ZoneOffset;
 @Service
 public class TokenService {
 
-    @Value("${api.security.token}")
+    @Value("${api.security.secret}")
     private String secret;
 
     public String gerarToken(Barbeiro barbeiro) throws RuntimeException {

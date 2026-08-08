@@ -36,7 +36,7 @@ public class BarbeiroService {
             barbeiro.setCpf(dados.cpf());
             barbeiro.setTelefone(dados.cpf());
             barbeiro.setUsuario(usuario);
-            barbeiro.setStatus(StatusBarbeiro.ATIVO);
+            barbeiro.setStatus(Status.ATIVO);
 
             usuariosRepository.save(usuario);
             barbeiroRepository.save(barbeiro);
@@ -81,7 +81,7 @@ public class BarbeiroService {
     public void desativarBarbeiro(Long id) {
         var barbeiro = barbeiroRepository.getReferenceById(id);
 
-        barbeiro.setStatus(StatusBarbeiro.DESATIVO);
+        barbeiro.setStatus(Status.DESATIVO);
         barbeiroRepository.save(barbeiro);
     }
 }

@@ -2,6 +2,7 @@ package com.barbersync.barbersync_api.Usuarios.controller;
 
 import com.barbersync.barbersync_api.Usuarios.dtos.DadosAlteracaoAdmin;
 import com.barbersync.barbersync_api.Usuarios.dtos.DadosCadastroAdmin;
+import com.barbersync.barbersync_api.Usuarios.dtos.DadosRetornoAdmin;
 import com.barbersync.barbersync_api.Usuarios.dtos.DadosRetornoBarbeiro;
 import com.barbersync.barbersync_api.Usuarios.repository.AdminRepository;
 import com.barbersync.barbersync_api.Usuarios.services.AdminService;
@@ -13,6 +14,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 @RequestMapping("/admins")
@@ -26,10 +28,11 @@ public class AdminController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity registrarAdmin(@RequestBody @Valid DadosCadastroAdmin dados) throws Exception {
-        adminService.cadastrarUsuarioAdmin(dados);
+    public ResponseEntity registrarAdmin(@RequestBody @Valid DadosCadastroAdmin dados, UriComponentsBuilder uriBuilder) throws Exception {
+        var admin = adminService.cadastrarUsuarioAdmin(dados);
+        var uri = uriBuilder.path("/admins/{id}").buildAndExpand(admin.getId()).toUri();
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.created(uri).body(new DadosRetornoAdmin(admin));
     }
 
     @PutMapping
@@ -42,10 +45,17 @@ public class AdminController {
 
     @DeleteMapping("/{id}")
     @Transactional
-    public ResponseEntity excluirBarbeiro(@PathVariable Long id) {
+    public ResponseEntity excluirBarbeiro(@PathVariable Long id) throws Exception {
         adminService.desativarAdmin(id);
 
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping
+    public Page<DadosRetornoAdmin> listarAdmin(@PageableDefault(sort="nome", size=10) Pageable page){
+        return repository.findAll(page).map(DadosRetornoAdmin::new);
+    }
+
+
 }
 
