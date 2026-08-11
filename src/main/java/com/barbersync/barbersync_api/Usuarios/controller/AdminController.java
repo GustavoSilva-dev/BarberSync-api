@@ -52,10 +52,9 @@ public class AdminController {
     }
 
     @GetMapping
-    public Page<DadosRetornoAdmin> listarAdmin(@PageableDefault(sort="nome", size=10) Pageable page){
-        return repository.findAll(page).map(DadosRetornoAdmin::new);
+    public Page<DadosRetornoAdmin> listarAdmin(@PageableDefault(sort="usuario.nome", size=10) Pageable page){
+        return repository.findAllbyAtivo(page).map(DadosRetornoAdmin::new);
     }
-
 
 }
 

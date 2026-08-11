@@ -50,6 +50,7 @@ public class AdminService {
 
     }
 
+    @Transactional
     public void alterarUsuarioAdmin(@Valid DadosAlteracaoAdmin dados) throws Exception {
         try {
             var admin = adminRepository.findById(dados.id()).orElseThrow(() -> new UsuarioNotFoundException("Admin não identificado no sistema"));
@@ -76,6 +77,7 @@ public class AdminService {
         }
     }
 
+    @Transactional
     public void desativarAdmin(Long id) throws Exception {
         try {
             if (adminRepository.countAllByAtivo() > 0){

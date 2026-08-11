@@ -7,6 +7,7 @@ import com.barbersync.barbersync_api.Usuarios.repository.BarbeiroRepository;
 import com.barbersync.barbersync_api.Usuarios.repository.UsuariosRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,7 +51,8 @@ public class BarbeiroService {
     @Transactional
     public Barbeiro mudarBarbeiro(@Valid DadosAlteracaoBarbeiro dados) throws Exception {
         try {
-            var barbeiro = barbeiroRepository.getReferenceById(dados.id());
+            var barbeiro = barbeiroRepository.findById(dados.id()).orElseThrow(() -> new UsernameNotFoundException("Barbeiro não encontrado"));
+
             var usuario = usuariosRepository.getReferenceById(barbeiro.getUsuario().getId());
 
             if(dados.nome() != null){
@@ -79,7 +81,7 @@ public class BarbeiroService {
 
     @Transactional
     public void desativarBarbeiro(Long id) {
-        var barbeiro = barbeiroRepository.getReferenceById(id);
+        var barbeiro = barbeiroRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("Barbeiro não encontrado"));
 
         barbeiro.setStatus(Status.DESATIVO);
         barbeiroRepository.save(barbeiro);

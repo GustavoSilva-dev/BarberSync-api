@@ -9,6 +9,7 @@ import com.barbersync.barbersync_api.Usuarios.repository.ClienteRepository;
 import com.barbersync.barbersync_api.Usuarios.repository.UsuariosRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -57,7 +58,7 @@ public class ClienteService {
 
     public Cliente alterarUsuarioCliente(@Valid DadosAlteracaoCliente dados) throws Exception {
         try {
-            var cliente = clienteRepository.getReferenceById(dados.id());
+            var cliente = clienteRepository.findById(dados.id()).orElseThrow(() -> new UsernameNotFoundException("Cliente não encontrado"));
             var usuario = usuariosRepository.getReferenceById(cliente.getUsuario().getId());
 
             if(dados.nome() != null){
