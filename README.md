@@ -70,3 +70,22 @@ O projeto segue um roadmap contínuo de evolução:
 1. **Clone o repositório:**
    ```bash
    git clone [https://github.com/GustavoSilva-dev/BarberSync-api.git](https://github.com/GustavoSilva-dev/BarberSync-api.git)
+
+2. **Configure as variáveis de ambiente no arquivo application.properties (ou variáveis do sistema) com suas credenciais do banco:**
+   ```bash
+    spring.datasource.url=jdbc:postgresql://<SEU_HOST_SUPABASE>:5432/postgres
+    spring.datasource.username=<SEU_USUARIO>
+    spring.datasource.password=<SUA_SENHA>
+
+3. **Compile e execute a aplicação:**
+   ```bash
+   ./mvnw spring-boot:run
+
+2. **Execute os testes:**
+    ```bash
+    ./mvnw test
+
+
+## Autor
+Desenvolvido por Gustavo Silva <br/>
+GitHub: @GustavoSilva-dev
