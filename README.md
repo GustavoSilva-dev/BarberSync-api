@@ -46,16 +46,16 @@ A API foi projetada seguindo os princípios de código limpo e arquitetura em ca
 O projeto segue um roadmap contínuo de evolução:
 
 - [ ] **Autenticação & Autorização:**
-  - Implementação de segurança stateless via **JWT (JSON Web Token)**.
-  - Controle de acesso baseado em perfis **(RBAC - Roles: ADMIN, BARBEIRO, CLIENTE)**.
+    - Implementação de segurança stateless via **JWT (JSON Web Token)**.
+    - Controle de acesso baseado em perfis **(RBAC - Roles: ADMIN, BARBEIRO, CLIENTE)**.
 - [ ] **Módulo de Agendamentos:**
-  - Validação de horários de funcionamento e conflitos de agenda.
-  - Cancelamento e remarcação com regras de antecedência.
+    - Validação de horários de funcionamento e conflitos de agenda.
+    - Cancelamento e remarcação com regras de antecedência.
 - [ ] **Módulo Financeiro:**
-  - Controle de comissões por barbeiro e relatórios de faturamento diário.
+    - Controle de comissões por barbeiro e relatórios de faturamento diário.
 - [ ] **Conteinerização & Deploy:**
-  - Criação de `Dockerfile` e `docker-compose.yml`.
-  - Deploy em ambiente de produção (Render / Cloud).
+    - Criação de `Dockerfile` e `docker-compose.yml`.
+    - Deploy em ambiente de produção (Render / Cloud).
 
 ---
 
