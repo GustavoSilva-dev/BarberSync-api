@@ -10,6 +10,7 @@ import com.barbersync.barbersync_api.Usuarios.repository.AdminRepository;
 import com.barbersync.barbersync_api.Usuarios.repository.UsuariosRepository;
 import com.barbersync.barbersync_api.infra.exception.UsuarioNotFoundException;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -90,6 +91,15 @@ public class AdminService {
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
+    }
 
+    public boolean validarKey(@Valid int adminKey) {
+        var admin = adminRepository.findByAdminKey(adminKey);
+
+        if(admin != null){
+            return true;
+        }
+
+        return false;
     }
 }

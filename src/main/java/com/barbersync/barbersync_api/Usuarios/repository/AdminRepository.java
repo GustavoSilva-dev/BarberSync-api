@@ -2,6 +2,7 @@ package com.barbersync.barbersync_api.Usuarios.repository;
 
 import aj.org.objectweb.asm.commons.Remapper;
 import com.barbersync.barbersync_api.Usuarios.classes.Admin;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,4 +17,6 @@ public interface AdminRepository extends JpaRepository<Admin, Long> {
 
     @Query("SELECT a FROM Admin a WHERE a.status = 'ATIVO'")
     Page<Admin> findAllbyAtivo(Pageable page);
+
+    Admin findByAdminKey(int adminKey);
 }
