@@ -70,7 +70,7 @@ public class AdminService {
                 usuario.setSenha(passwordEncoder.encode(dados.senha()));
             }
 
-            if (dados.adminKey() != 0){
+            if (dados.adminKey() != null){
                 admin.setAdminKey(dados.adminKey());
             }
         } catch (Exception e) {
@@ -93,7 +93,7 @@ public class AdminService {
         }
     }
 
-    public boolean validarKey(@Valid int adminKey) {
+    public boolean validarKey(@Valid String adminKey) {
         var admin = adminRepository.findByAdminKey(adminKey);
 
         if(admin != null){

@@ -9,6 +9,6 @@ public record DadosAlteracaoAdmin(
         String nome,
         String email,
         String senha,
-        int adminKey
+        String adminKey
 ) {
 }

@@ -1,0 +1,2 @@
+ALTER TABLE admin
+ALTER COLUMN admin_key TYPE VARCHAR(20);

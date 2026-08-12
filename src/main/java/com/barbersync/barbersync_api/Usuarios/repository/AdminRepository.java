@@ -18,5 +18,5 @@ public interface AdminRepository extends JpaRepository<Admin, Long> {
     @Query("SELECT a FROM Admin a WHERE a.status = 'ATIVO'")
     Page<Admin> findAllbyAtivo(Pageable page);
 
-    Admin findByAdminKey(int adminKey);
+    Admin findByAdminKey(String adminKey);
 }

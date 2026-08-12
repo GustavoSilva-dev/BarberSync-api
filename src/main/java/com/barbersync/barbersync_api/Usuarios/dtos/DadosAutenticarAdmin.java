@@ -8,6 +8,6 @@ public record DadosAutenticarAdmin(
         @NotBlank(message = "Senha é necessária para autenticar")
         String senha,
         @NotBlank(message = "Insira a chave de admin para autenticar")
-        int adminKey
+        String adminKey
 ) {
 }

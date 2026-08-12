@@ -35,7 +35,7 @@ public class Admin implements UserDetails {
     @JoinColumn(name = "usuario_id")
     private Usuario usuario;
 
-    private int adminKey;
+    private String adminKey;
 
     @Enumerated(EnumType.STRING)
     private Status status;

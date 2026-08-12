@@ -13,7 +13,7 @@ public record DadosCadastroAdmin(
         @NotBlank(message = "O campo senha é obrigatório.")
         String senha,
 
-        @NotNull(message = "O campo adminKey é obrigatório.")
-        int adminKey
+        @NotBlank(message = "O campo adminKey é obrigatório.")
+        String adminKey
 ) {
 }

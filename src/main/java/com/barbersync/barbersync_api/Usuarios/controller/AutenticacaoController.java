@@ -38,9 +38,7 @@ public class AutenticacaoController {
         try {
             var token = new UsernamePasswordAuthenticationToken(dados.email(), dados.senha());
             var autenticacao = authenticationManager.authenticate(token);
-
-            var principal = autenticacao.getPrincipal();
-            var tokenJWT = tokenService.gerarToken((Cliente) principal);
+            var tokenJWT = tokenService.gerarToken((Cliente) autenticacao.getPrincipal());
 
             return ResponseEntity.ok(new DadosRetornoAutenticacao(tokenJWT));
         } catch (Exception e) {
@@ -51,25 +49,37 @@ public class AutenticacaoController {
 
     @PostMapping("/barbeiro")
     public ResponseEntity autenticarBarbeiro(@Valid DadosAutenticarClienteBarbeiro dados){
-        var token = new UsernamePasswordAuthenticationToken(dados.email(), dados.senha());
-        var autenticacao = authenticationManager.authenticate(token);
-        var tokenJWT = tokenService.gerarToken((Barbeiro) autenticacao.getPrincipal());
+        try {
+            var token = new UsernamePasswordAuthenticationToken(dados.email(), dados.senha());
+            var autenticacao = authenticationManager.authenticate(token);
+            var tokenJWT = tokenService.gerarToken((Barbeiro) autenticacao.getPrincipal());
 
-        return ResponseEntity.ok(new DadosRetornoAutenticacao(tokenJWT));
+            return ResponseEntity.ok(new DadosRetornoAutenticacao(tokenJWT));
+        } catch (Exception e) {
+            e.getStackTrace();
+            return ResponseEntity.status(401).body("Falha na autenticação: " + e.getMessage());
+        }
+
     }
 
     @PostMapping("/admin")
     public ResponseEntity autenticarAdmin(@Valid DadosAutenticarAdmin dados){
-        boolean validador = adminService.validarKey(dados.adminKey());
+        try {
+            boolean validador = adminService.validarKey(dados.adminKey());
 
-        if(validador) {
-            var token = new UsernamePasswordAuthenticationToken(dados.email(), dados.senha());
-            var autenticacao = authenticationManager.authenticate(token);
-            var tokenJWT = tokenService.gerarToken((Admin) autenticacao.getPrincipal());
+            if(validador) {
+                var token = new UsernamePasswordAuthenticationToken(dados.email(), dados.senha());
+                var autenticacao = authenticationManager.authenticate(token);
+                var tokenJWT = tokenService.gerarToken((Admin) autenticacao.getPrincipal());
 
-            return ResponseEntity.ok(new DadosRetornoAutenticacao(tokenJWT));
+                return ResponseEntity.ok(new DadosRetornoAutenticacao(tokenJWT));
+            } else {
+                throw new Exception("Chave de admin inválida.");
+            }
+        } catch (Exception e) {
+            e.getStackTrace();
+            return ResponseEntity.status(401).body("Falha na autenticação: " + e.getMessage());
         }
 
-        return ResponseEntity.badRequest().build();
     }
 }
