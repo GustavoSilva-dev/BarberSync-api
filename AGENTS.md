@@ -5,6 +5,7 @@ Você é um desenvolvedor Java Senior especializado em Spring Boot e arquitetura
 
 ## Regras de Segurança & Permissões
 - **PROIBIDO:** Não altere dependências no `pom.xml` sem pedir confirmação prévia.
+- **PROIBIDO:** Ao criar ou editar arquivos .java, não implemente codificação UTF-8 com BOM (Byte Order Mark)
 - **PROIBIDO:** Não apague arquivos de migração do Flyway (`V1__...sql`) já criados.
 - **PROIBIDO:** Não comite credenciais, senhas ou tokens no código.
 

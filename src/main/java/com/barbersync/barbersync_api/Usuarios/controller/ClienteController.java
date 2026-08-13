@@ -5,6 +5,7 @@ import com.barbersync.barbersync_api.Usuarios.dtos.DadosCadastroCliente;
 import com.barbersync.barbersync_api.Usuarios.dtos.DadosRetornoCliente;
 import com.barbersync.barbersync_api.Usuarios.repository.ClienteRepository;
 import com.barbersync.barbersync_api.Usuarios.services.ClienteService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -35,12 +36,14 @@ public class ClienteController {
     }
 
     @GetMapping
+    @SecurityRequirement(name = "bearer-key")
     public Page<DadosRetornoCliente> listarClientes(@PageableDefault(size = 10, sort="usuario.nome") Pageable paginacao) {
         return repository.findAll(paginacao).map(DadosRetornoCliente::new);
     }
 
     @DeleteMapping("/{id}")
     @Transactional
+    @SecurityRequirement(name = "bearer-key")
     public ResponseEntity deletarCliente(@PathVariable Long id){
         repository.deleteById(id);
 
@@ -49,6 +52,7 @@ public class ClienteController {
 
     @PutMapping
     @Transactional
+    @SecurityRequirement(name = "bearer-key")
     public ResponseEntity alterarCliente(@RequestBody @Valid DadosAlteracaoCliente dados) throws Exception {
         var cliente = clienteService.alterarUsuarioCliente(dados);
 

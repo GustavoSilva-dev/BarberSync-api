@@ -5,6 +5,7 @@ import com.barbersync.barbersync_api.Usuarios.dtos.DadosCadastroBarbeiro;
 import com.barbersync.barbersync_api.Usuarios.dtos.DadosRetornoBarbeiro;
 import com.barbersync.barbersync_api.Usuarios.repository.BarbeiroRepository;
 import com.barbersync.barbersync_api.Usuarios.services.BarbeiroService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -36,6 +37,7 @@ public class BarbeiroController {
 
     @DeleteMapping("/{id}")
     @Transactional
+    @SecurityRequirement(name = "bearer-key")
     public ResponseEntity excluirBarbeiro(@PathVariable Long id){
         barbeiroService.desativarBarbeiro(id);
 
@@ -43,11 +45,13 @@ public class BarbeiroController {
     }
 
     @GetMapping
+    @SecurityRequirement(name = "bearer-key")
     public Page<DadosRetornoBarbeiro> listarBarbeiros(@PageableDefault(size=10, sort="usuario.nome") Pageable paginacao){
         return repository.findAllByAtivo(paginacao).map(DadosRetornoBarbeiro::new);
     }
 
     @PutMapping
+    @SecurityRequirement(name = "bearer-key")
     public ResponseEntity alterarBarbeiro(@RequestBody @Valid DadosAlteracaoBarbeiro dados) throws Exception {
         var barbeiro = barbeiroService.mudarBarbeiro(dados);
         return ResponseEntity.ok().body(new DadosRetornoBarbeiro(barbeiro));

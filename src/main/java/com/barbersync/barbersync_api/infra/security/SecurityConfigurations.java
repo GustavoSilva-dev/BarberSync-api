@@ -34,7 +34,19 @@ public class SecurityConfigurations {
 
                 .authorizeHttpRequests(req -> {
                     req.requestMatchers(HttpMethod.POST, "/auth/**").permitAll();
+                    req.requestMatchers(HttpMethod.POST, "/clientes").permitAll();
+                    req.requestMatchers(HttpMethod.POST, "/barbeiros").permitAll();
+                    req.requestMatchers(HttpMethod.POST, "/admins").hasAnyRole("ADMIN");
                     req.requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll();
+                    req.requestMatchers(HttpMethod.PUT, "/clientes").hasAnyRole("CLIENTE", "ADMIN");
+                    req.requestMatchers(HttpMethod.PUT, "/barbeiros").hasAnyRole("BARBEIRO", "ADMIN");
+                    req.requestMatchers(HttpMethod.PUT, "/admins").hasAnyRole("ADMIN");
+                    req.requestMatchers(HttpMethod.GET, "/admins").hasAnyRole("ADMIN");
+                    req.requestMatchers(HttpMethod.GET, "/clientes").hasAnyRole("CLIENTE", "ADMIN");
+                    req.requestMatchers(HttpMethod.GET, "/barbeiros").hasAnyRole("BARBEIRO", "ADMIN");
+                    req.requestMatchers(HttpMethod.DELETE, "/barbeiros/**").hasAnyRole("BARBEIRO", "ADMIN");
+                    req.requestMatchers(HttpMethod.DELETE, "/clientes/**").hasAnyRole("CLIENTE", "ADMIN");
+                    req.requestMatchers(HttpMethod.DELETE, "/admins/**").hasAnyRole("BARBEIRO", "ADMIN");
                     req.anyRequest().permitAll();
                 })
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)

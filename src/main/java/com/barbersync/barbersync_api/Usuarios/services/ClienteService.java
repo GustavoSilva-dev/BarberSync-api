@@ -52,7 +52,7 @@ public class ClienteService {
 
             return cliente;
         } catch (Exception e) {
-            throw new Exception("Dados faltantes ou incorretos!");
+            throw new Exception("Dados faltantes ou incorretos: " + e.getMessage());
         }
     }
 
@@ -81,7 +81,7 @@ public class ClienteService {
             clienteRepository.save(cliente);
             return cliente;
         } catch (Exception e) {
-            throw new Exception("Dados incorretos - não foi possível alterar o usuário");
+            throw new Exception("Dados incorretos - não foi possível alterar o usuário: " + e.getMessage());
         }
     }
 }

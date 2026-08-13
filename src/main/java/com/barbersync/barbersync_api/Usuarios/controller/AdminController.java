@@ -6,6 +6,7 @@ import com.barbersync.barbersync_api.Usuarios.dtos.DadosRetornoAdmin;
 import com.barbersync.barbersync_api.Usuarios.dtos.DadosRetornoBarbeiro;
 import com.barbersync.barbersync_api.Usuarios.repository.AdminRepository;
 import com.barbersync.barbersync_api.Usuarios.services.AdminService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -28,6 +29,7 @@ public class AdminController {
 
     @PostMapping
     @Transactional
+    @SecurityRequirement(name = "bearer-key")
     public ResponseEntity registrarAdmin(@RequestBody @Valid DadosCadastroAdmin dados, UriComponentsBuilder uriBuilder) throws Exception {
         var admin = adminService.cadastrarUsuarioAdmin(dados);
         var uri = uriBuilder.path("/admins/{id}").buildAndExpand(admin.getId()).toUri();
@@ -37,6 +39,7 @@ public class AdminController {
 
     @PutMapping
     @Transactional
+    @SecurityRequirement(name = "bearer-key")
     public ResponseEntity alterarAdmin(@RequestBody @Valid DadosAlteracaoAdmin dados) throws Exception {
         adminService.alterarUsuarioAdmin(dados);
 
@@ -45,6 +48,7 @@ public class AdminController {
 
     @DeleteMapping("/{id}")
     @Transactional
+    @SecurityRequirement(name = "bearer-key")
     public ResponseEntity excluirBarbeiro(@PathVariable Long id) throws Exception {
         adminService.desativarAdmin(id);
 
@@ -52,6 +56,7 @@ public class AdminController {
     }
 
     @GetMapping
+    @SecurityRequirement(name = "bearer-key")
     public Page<DadosRetornoAdmin> listarAdmin(@PageableDefault(sort="usuario.nome", size=10) Pageable page){
         return repository.findAllbyAtivo(page).map(DadosRetornoAdmin::new);
     }

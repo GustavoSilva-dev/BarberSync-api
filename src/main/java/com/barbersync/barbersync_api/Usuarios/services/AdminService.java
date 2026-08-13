@@ -9,6 +9,7 @@ import com.barbersync.barbersync_api.Usuarios.dtos.Status;
 import com.barbersync.barbersync_api.Usuarios.repository.AdminRepository;
 import com.barbersync.barbersync_api.Usuarios.repository.UsuariosRepository;
 import com.barbersync.barbersync_api.infra.exception.UsuarioNotFoundException;
+import com.barbersync.barbersync_api.infra.exception.ValidacaoException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +47,7 @@ public class AdminService {
             usuariosRepository.save(usuario);
             return adminRepository.save(admin);
         } catch (Exception e) {
-            throw new Exception("Dados faltantes ou incorretos!");
+            throw new Exception("Dados faltantes ou incorretos: " + e.getMessage());
         }
 
     }
@@ -74,7 +75,7 @@ public class AdminService {
                 admin.setAdminKey(dados.adminKey());
             }
         } catch (Exception e) {
-            throw new Exception("Erro em alteração de admin - Dados faltantes ou incorretos");
+            throw new Exception("Erro em alteração de admin - Dados faltantes ou incorretos: " + e.getMessage());
         }
     }
 
@@ -86,7 +87,7 @@ public class AdminService {
 
                 admin.setStatus(Status.DESATIVO);
             } else {
-                throw new Exception("Impossível realizar exclusão: Deve haver no mínimo 1 ADMIN remanescente no sistema");
+                throw new ValidacaoException("Impossível realizar exclusão: Deve haver no mínimo 1 ADMIN remanescente no sistema");
             }
         } catch (Exception e) {
             throw new Exception(e.getMessage());

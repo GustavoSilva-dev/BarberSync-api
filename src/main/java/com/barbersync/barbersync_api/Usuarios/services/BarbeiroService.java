@@ -44,7 +44,7 @@ public class BarbeiroService {
 
             return barbeiro;
         } catch (Exception e) {
-            throw new Exception("Dados faltantes ou incorretos!");
+            throw new Exception("Dados faltantes ou incorretos: " + e.getMessage());
         }
     }
 
@@ -75,7 +75,7 @@ public class BarbeiroService {
             usuariosRepository.save(usuario);
             return barbeiro;
         } catch (Exception e) {
-            throw new Exception("Dados incorretos - Não foi possível alterar o usuário");
+            throw new Exception("Dados incorretos - Não foi possível alterar o usuário: " + e.getMessage());
         }
     }
 

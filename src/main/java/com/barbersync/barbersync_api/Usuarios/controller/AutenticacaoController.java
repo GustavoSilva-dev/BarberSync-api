@@ -10,6 +10,7 @@ import com.barbersync.barbersync_api.Usuarios.repository.AdminRepository;
 import com.barbersync.barbersync_api.Usuarios.repository.BarbeiroRepository;
 import com.barbersync.barbersync_api.Usuarios.repository.ClienteRepository;
 import com.barbersync.barbersync_api.Usuarios.services.AdminService;
+import com.barbersync.barbersync_api.infra.exception.ValidacaoException;
 import com.barbersync.barbersync_api.infra.security.TokenService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,7 +75,7 @@ public class AutenticacaoController {
 
                 return ResponseEntity.ok(new DadosRetornoAutenticacao(tokenJWT));
             } else {
-                throw new Exception("Chave de admin inválida.");
+                throw new ValidacaoException("Chave de admin inválida.");
             }
         } catch (Exception e) {
             e.getStackTrace();
