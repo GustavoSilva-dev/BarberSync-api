@@ -60,10 +60,10 @@ class AdminControllerTest {
 
     @Test
     @DisplayName("Deve retornar status 201 (CREATED) ao cadastrar um admin com dados válidos")
-    @WithMockUser
+    @WithMockUser(roles = "ADMIN")
     void registrarAdmin_cenario1() throws Exception {
         // Given
-        DadosCadastroAdmin dados = new DadosCadastroAdmin("Admin Teste", "admin@teste.com", "senha123", 12345);
+        DadosCadastroAdmin dados = new DadosCadastroAdmin("Admin Teste", "admin@teste.com", "senha123", "12345");
 
         var usuarioTeste = new Usuario(1L, dados.nome(), dados.email(), dados.senha(), Roles.ADMIN);
         var adminTeste = new Admin(1L, usuarioTeste, dados.adminKey(), Status.ATIVO);
@@ -81,14 +81,14 @@ class AdminControllerTest {
 
     @Test
     @DisplayName("Deve retornar status 400 (BAD REQUEST) ao cadastrar um admin com email inválido")
-    @WithMockUser
+    @WithMockUser(roles = "ADMIN")
     void registrarAdmin_cenario2() throws Exception {
         // Given
         DadosCadastroAdmin dados = new DadosCadastroAdmin(
                 "Admin Teste",
                 "admin",
                 "senha123",
-                12345);
+                "12345");
 
         var jsonBody = cadastroAdminJacksonTester.write(dados).getJson();
 
@@ -101,10 +101,10 @@ class AdminControllerTest {
 
     @Test
     @DisplayName("Deve retornar status 200 (OK) ao alterar um admin com dados válidos")
-    @WithMockUser
+    @WithMockUser(roles = "ADMIN")
     void alterarAdmin_cenario1() throws Exception {
         // Given
-        DadosAlteracaoAdmin dados = new DadosAlteracaoAdmin(1L, "Admin Atualizado", "admin@teste.com", "novaSenha", 54321);
+        DadosAlteracaoAdmin dados = new DadosAlteracaoAdmin(1L, "Admin Atualizado", "admin@teste.com", "novaSenha", "54321");
 
         String jsonBody = alteracaoAdminJacksonTester.write(dados).getJson();
 
@@ -118,7 +118,7 @@ class AdminControllerTest {
 
     @Test
     @DisplayName("Deve retornar status 204 (No Content) ao desativar um admin existente")
-    @WithMockUser
+    @WithMockUser(roles = "ADMIN")
     void excluirAdmin_cenario1() throws Exception {
         // Given
         Long id = 1L;
@@ -130,10 +130,10 @@ class AdminControllerTest {
 
     @Test
     @DisplayName("Deve retornar status 200 (OKK) o listar os admins ativos")
-    @WithMockUser
+    @WithMockUser(roles = "ADMIN")
     void listarAdmin_cenario1() throws Exception {
         var usuarioTeste = new Usuario(1L, "Jeff Admin", "jeff123", "jeff@admin.com", Roles.ADMIN);
-        var adminTeste = new Admin(1L, usuarioTeste, 3334455, Status.ATIVO);
+        var adminTeste = new Admin(1L, usuarioTeste, "3334455", Status.ATIVO);
 
         List<Admin> adminList = List.of(adminTeste);
         Page<Admin> page = new PageImpl<>(adminList, PageRequest.of(0, 10), 1);

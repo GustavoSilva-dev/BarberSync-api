@@ -53,7 +53,7 @@ class ClienteControllerTest {
 
     @Test
     @DisplayName("Deve retornar status 201 (CREATED) ao cadastrar um cliente com dados válidos")
-    @WithMockUser
+    @WithMockUser(roles = "CLIENTE")
     void registrarCliente_cenario1() throws Exception {
         // Given
         DadosCadastroCliente dados = new DadosCadastroCliente(
@@ -79,7 +79,7 @@ class ClienteControllerTest {
 
     @Test
     @DisplayName("Deve retornar status 400 (BAD_REQUEST) ao cadastrar cliente com email inválido")
-    @WithMockUser
+    @WithMockUser(roles = "CLIENTE")
     void registrarCliente_cenario2() throws Exception {
         // Given
         DadosCadastroCliente dados = new DadosCadastroCliente(
@@ -100,7 +100,7 @@ class ClienteControllerTest {
 
     @Test
     @DisplayName("Deve retornar status 400 (BAD_REQUEST) ao cadastrar cliente com telefone em formato inválido")
-    @WithMockUser
+    @WithMockUser(roles = "CLIENTE")
     void registrarCliente_cenario3() throws Exception {
         // Given
         DadosCadastroCliente dados = new DadosCadastroCliente(
@@ -121,7 +121,7 @@ class ClienteControllerTest {
 
     @Test
     @DisplayName("Deve retornar status 200 (OK) ao alterar um cliente com dados válidos")
-    @WithMockUser
+    @WithMockUser(roles = "CLIENTE")
     void alterarCliente_cenario1() throws Exception {
         // Given
         DadosAlteracaoCliente dados = new DadosAlteracaoCliente(
@@ -148,7 +148,7 @@ class ClienteControllerTest {
 
     @Test
     @DisplayName("Deve retornar status 400 (BAD_REQUEST) ao alterar cliente com email inválido")
-    @WithMockUser
+    @WithMockUser(roles = "CLIENTE")
     void alterarCliente_cenario2() throws Exception {
         // Given
         DadosAlteracaoCliente dados = new DadosAlteracaoCliente(
@@ -170,7 +170,7 @@ class ClienteControllerTest {
 
     @Test
     @DisplayName("Deve retornar status 204 (NO_CONTENT) ao deletar um cliente existente")
-    @WithMockUser
+    @WithMockUser(roles = "CLIENTE")
     void deletarCliente_cenario1() throws Exception {
         // Given
         Long id = 1L;
@@ -182,7 +182,7 @@ class ClienteControllerTest {
 
     @Test
     @DisplayName("Deve retornar status 200 (OK) ao listar clientes com sucesso")
-    @WithMockUser
+    @WithMockUser(roles = "CLIENTE")
     void listarClientes_cenario1() throws Exception {
         // Given
         var usuarioTeste = new Usuario(1L, "Maria Cliente", "maria@cliente.com", "senha123", Roles.CLIENTE);

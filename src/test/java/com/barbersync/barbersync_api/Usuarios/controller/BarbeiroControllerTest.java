@@ -54,7 +54,7 @@ class BarbeiroControllerTest {
 
     @Test
     @DisplayName("Deve retornar status 201 (CREATED) ao cadastrar um barbeiro com dados válidos")
-    @WithMockUser
+    @WithMockUser(roles = "BARBEIRO")
     void registrarBarbeiro_cenario1() throws Exception {
         // Given
         DadosCadastroBarbeiro dados = new DadosCadastroBarbeiro(
@@ -81,7 +81,7 @@ class BarbeiroControllerTest {
 
     @Test
     @DisplayName("Deve retornar status 400 (BAD_REQUEST) ao cadastrar barbeiro com email inválido")
-    @WithMockUser
+    @WithMockUser(roles = "BARBEIRO")
     void registrarBarbeiro_cenario2() throws Exception {
         // Given
         DadosCadastroBarbeiro dados = new DadosCadastroBarbeiro(
@@ -103,7 +103,7 @@ class BarbeiroControllerTest {
 
     @Test
     @DisplayName("Deve retornar status 400 (BAD_REQUEST) ao cadastrar barbeiro com telefone em formato inválido")
-    @WithMockUser
+    @WithMockUser(roles = "BARBEIRO")
     void registrarBarbeiro_cenario3() throws Exception {
         // Given
         DadosCadastroBarbeiro dados = new DadosCadastroBarbeiro(
@@ -125,7 +125,7 @@ class BarbeiroControllerTest {
 
     @Test
     @DisplayName("Deve retornar status 400 (BAD_REQUEST) ao cadastrar barbeiro com CPF em formato inválido")
-    @WithMockUser
+    @WithMockUser(roles = "BARBEIRO")
     void registrarBarbeiro_cenario4() throws Exception {
         // Given
         DadosCadastroBarbeiro dados = new DadosCadastroBarbeiro(
@@ -147,7 +147,7 @@ class BarbeiroControllerTest {
 
     @Test
     @DisplayName("Deve retornar status 200 (OK) ao alterar um barbeiro com dados válidos")
-    @WithMockUser
+    @WithMockUser(roles = "BARBEIRO")
     void alterarBarbeiro_cenario1() throws Exception {
         // Given
         DadosAlteracaoBarbeiro dados = new DadosAlteracaoBarbeiro(
@@ -175,7 +175,7 @@ class BarbeiroControllerTest {
 
     @Test
     @DisplayName("Deve retornar status 400 (BAD_REQUEST) ao alterar barbeiro com email inválido")
-    @WithMockUser
+    @WithMockUser(roles = "BARBEIRO")
     void alterarBarbeiro_cenario2() throws Exception {
         // Given
         DadosAlteracaoBarbeiro dados = new DadosAlteracaoBarbeiro(
@@ -198,7 +198,7 @@ class BarbeiroControllerTest {
 
     @Test
     @DisplayName("Deve retornar status 400 (BAD_REQUEST) ao alterar barbeiro com telefone em formato inválido")
-    @WithMockUser
+    @WithMockUser(roles = "BARBEIRO")
     void alterarBarbeiro_cenario3() throws Exception {
         // Given
         DadosAlteracaoBarbeiro dados = new DadosAlteracaoBarbeiro(
@@ -221,7 +221,7 @@ class BarbeiroControllerTest {
 
     @Test
     @DisplayName("Deve retornar status 400 (BAD_REQUEST) ao alterar barbeiro com CPF em formato inválido")
-    @WithMockUser
+    @WithMockUser(roles = "BARBEIRO")
     void alterarBarbeiro_cenario4() throws Exception {
         // Given
         DadosAlteracaoBarbeiro dados = new DadosAlteracaoBarbeiro(
@@ -244,7 +244,7 @@ class BarbeiroControllerTest {
 
     @Test
     @DisplayName("Deve retornar status 204 (NO_CONTENT) ao desativar um barbeiro existente")
-    @WithMockUser
+    @WithMockUser(roles = "BARBEIRO")
     void excluirBarbeiro_cenario1() throws Exception {
         // Given
         Long id = 1L;
@@ -256,7 +256,7 @@ class BarbeiroControllerTest {
 
     @Test
     @DisplayName("Deve retornar status 200 (OK) ao listar barbeiros com sucesso")
-    @WithMockUser
+    @WithMockUser(roles = "BARBEIRO")
     void listarBarbeiros_cenario1() throws Exception {
         // Given
         var usuarioTeste = new Usuario(1L, "João Barbeiro", "joao@barbershop.com", "senha123", Roles.BARBEIRO);

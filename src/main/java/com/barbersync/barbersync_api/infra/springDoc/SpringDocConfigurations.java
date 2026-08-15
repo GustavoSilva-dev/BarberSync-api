@@ -18,8 +18,8 @@ public class SpringDocConfigurations {
                                 new SecurityScheme().type(SecurityScheme.Type.HTTP).scheme("bearer").bearerFormat("JWT")))
                 .info(new Info()
                         .title("BarberSync API")
-                        .version("0.0.1")
-                        .description("API/Backend do projeto BarberSync, plataforma de controle e gestão de uma barbearia, com fluxo de agendamentos, controle de clientes e serviços e gestão financeira.")
+                        .version("0.0.12")
+                        .description("API/Backend do projeto BarberSync, plataforma SaaS de controle e gestão de uma barbearia, com fluxo de agendamentos, controle de clientes e serviços e gestão financeira.")
                 );
     }
 }
