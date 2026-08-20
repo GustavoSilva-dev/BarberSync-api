@@ -35,8 +35,8 @@ public class ExceptionClass {
     }
 
     @ExceptionHandler(UsuarioNotFoundException.class)
-    public ResponseEntity<DadosErro> handleUsuarioNotFound() {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new DadosErro("Usuário não encontrado."));
+    public ResponseEntity<DadosErro> handleUsuarioNotFound(String message) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new DadosErro(message));
     }
 
     @ExceptionHandler(Exception.class)
