@@ -42,7 +42,7 @@ public class Admin implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_" + this.usuario.getRole()));
+        return List.of(new SimpleGrantedAuthority("ADMIN"));
     }
 
     @Override

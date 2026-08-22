@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import jakarta.validation.ConstraintViolationException;
+import org.springframework.web.client.HttpClientErrorException;
 
 @RestControllerAdvice
 public class ExceptionClass {
@@ -17,6 +18,11 @@ public class ExceptionClass {
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<DadosErro> handleBadRequest() {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new DadosErro("Requisição inválida."));
+    }
+
+    @ExceptionHandler(TokenException.class)
+    public ResponseEntity<DadosErro> handleToken(String message) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new DadosErro(message));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -40,7 +46,7 @@ public class ExceptionClass {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<DadosErro> handleGeneric() {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new DadosErro("Erro interno no servidor."));
+    public ResponseEntity<DadosErro> handleGenerics(){
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new DadosErro("Erro de servidor: Acesso inválido ou Falha de Microsserviços"));
     }
 }

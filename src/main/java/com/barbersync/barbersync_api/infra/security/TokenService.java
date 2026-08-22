@@ -8,6 +8,8 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.barbersync.barbersync_api.Usuarios.classes.Admin;
 import com.barbersync.barbersync_api.Usuarios.classes.Barbeiro;
 import com.barbersync.barbersync_api.Usuarios.classes.Cliente;
+import com.barbersync.barbersync_api.infra.exception.TokenException;
+import com.barbersync.barbersync_api.infra.exception.ValidacaoException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +28,7 @@ public class TokenService {
             Algorithm algorithm = Algorithm.HMAC256(secret);
             String token = JWT.create()
                     .withIssuer("barbersync-system")
-                    .withSubject(barbeiro.getUsuario().getNome())
+                    .withSubject(barbeiro.getUsuario().getEmail())
                     .withClaim("role", "BARBEIRO")
                     .withExpiresAt(dataExpiracao())
                     .sign(algorithm);
@@ -41,7 +43,7 @@ public class TokenService {
             Algorithm algorithm = Algorithm.HMAC256(secret);
             String token = JWT.create()
                     .withIssuer("barbersync-system")
-                    .withSubject(cliente.getUsuario().getNome())
+                    .withSubject(cliente.getUsuario().getEmail())
                     .withClaim("role", "CLIENTE")
                     .withExpiresAt(dataExpiracao())
                     .sign(algorithm);
@@ -56,7 +58,7 @@ public class TokenService {
             Algorithm algorithm = Algorithm.HMAC256(secret);
             String token = JWT.create()
                     .withIssuer("barbersync-system")
-                    .withSubject(admin.getUsuario().getNome())
+                    .withSubject(admin.getUsuario().getEmail())
                     .withClaim("role", "ADMIN")
                     .withExpiresAt(dataExpiracao())
                     .sign(algorithm);
@@ -73,15 +75,12 @@ public class TokenService {
     }
 
     public String coletarSubject(String token) {
-        try {
+            DecodedJWT decodedJWT;
             Algorithm algorithm = Algorithm.HMAC256(secret);
             return JWT.require(algorithm)
-                    .withIssuer("barbersync-api")
+                    .withIssuer("barbersync-system")
                     .build()
                     .verify(token)
                     .getSubject();
-        } catch (JWTVerificationException exception){
-            throw new RuntimeException("Token de acesso inválido ou expirado.");
-        }
     }
 }

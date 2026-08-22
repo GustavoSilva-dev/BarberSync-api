@@ -32,23 +32,22 @@ public class SecurityConfigurations {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
-                .authorizeHttpRequests(req -> {
-                    req.requestMatchers(HttpMethod.POST, "/auth/**").permitAll();
-                    req.requestMatchers(HttpMethod.POST, "/clientes").permitAll();
-                    req.requestMatchers(HttpMethod.POST, "/barbeiros").permitAll();
-                    req.requestMatchers(HttpMethod.POST, "/admins").hasAnyRole("ADMIN");
-                    req.requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll();
-                    req.requestMatchers(HttpMethod.PUT, "/clientes").hasAnyRole("CLIENTE", "ADMIN");
-                    req.requestMatchers(HttpMethod.PUT, "/barbeiros").hasAnyRole("BARBEIRO", "ADMIN");
-                    req.requestMatchers(HttpMethod.PUT, "/admins").hasAnyRole("ADMIN");
-                    req.requestMatchers(HttpMethod.GET, "/admins").hasAnyRole("ADMIN");
-                    req.requestMatchers(HttpMethod.GET, "/clientes").hasAnyRole("CLIENTE", "ADMIN");
-                    req.requestMatchers(HttpMethod.GET, "/barbeiros").hasAnyRole("BARBEIRO", "ADMIN");
-                    req.requestMatchers(HttpMethod.DELETE, "/barbeiros/**").hasAnyRole("BARBEIRO", "ADMIN");
-                    req.requestMatchers(HttpMethod.DELETE, "/clientes/**").hasAnyRole("CLIENTE", "ADMIN");
-                    req.requestMatchers(HttpMethod.DELETE, "/admins/**").hasAnyRole("BARBEIRO", "ADMIN");
-                    req.anyRequest().permitAll();
-                })
+                .authorizeHttpRequests(req ->
+                    req.requestMatchers(HttpMethod.POST, "/auth/**").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/clientes").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/barbeiros").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/admins").hasAuthority("ADMIN")
+                    .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+                    .requestMatchers(HttpMethod.PUT, "/clientes").hasAnyAuthority("CLIENTE", "ADMIN")
+                    .requestMatchers(HttpMethod.PUT, "/barbeiros").hasAnyAuthority("BARBEIRO", "ADMIN")
+                    .requestMatchers(HttpMethod.PUT, "/admins").hasAuthority("ADMIN")
+                    .requestMatchers(HttpMethod.GET, "/admins").hasAuthority("ADMIN")
+                    .requestMatchers(HttpMethod.GET, "/clientes").hasAnyAuthority("CLIENTE", "ADMIN")
+                    .requestMatchers(HttpMethod.GET, "/barbeiros").hasAnyAuthority("BARBEIRO", "ADMIN")
+                    .requestMatchers(HttpMethod.DELETE, "/barbeiros/**").hasAnyAuthority("BARBEIRO", "ADMIN")
+                    .requestMatchers(HttpMethod.DELETE, "/clientes/**").hasAnyAuthority("CLIENTE", "ADMIN")
+                    .requestMatchers(HttpMethod.DELETE, "/admins/**").hasAuthority("ADMIN")
+                    .anyRequest().permitAll())
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
