@@ -27,6 +27,7 @@ public class ServicoService {
         servico.setNome(dados.nome());
         servico.setDescricao(dados.descricao());
         servico.setPreco(dados.preco());
+
         servico.setDuracaoEmMinutos(dados.duracaoEmMinutos());
         servico.setAtivo(true);
 
