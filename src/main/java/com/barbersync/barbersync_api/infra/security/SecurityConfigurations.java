@@ -43,8 +43,6 @@ public class SecurityConfigurations {
                     .requestMatchers(HttpMethod.PUT, "/servico/**").hasAnyAuthority("BARBEIRO", "ADMIN")
                     .requestMatchers(HttpMethod.PUT, "/admins").hasAuthority("ADMIN")
                     .requestMatchers(HttpMethod.GET, "/admins").hasAuthority("ADMIN")
-                    .requestMatchers(HttpMethod.GET, "/clientes").hasAnyAuthority("CLIENTE", "ADMIN")
-                    .requestMatchers(HttpMethod.GET, "/barbeiros").hasAnyAuthority("BARBEIRO", "ADMIN")
                     .requestMatchers(HttpMethod.POST, "/servico").hasAnyAuthority("BARBEIRO", "ADMIN")
                     .requestMatchers(HttpMethod.DELETE, "/barbeiros/**").hasAnyAuthority("BARBEIRO", "ADMIN")
                     .requestMatchers(HttpMethod.DELETE, "/clientes/**").hasAnyAuthority("CLIENTE", "ADMIN")

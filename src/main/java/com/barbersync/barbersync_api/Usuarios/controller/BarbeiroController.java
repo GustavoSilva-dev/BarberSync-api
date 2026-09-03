@@ -8,6 +8,7 @@ import com.barbersync.barbersync_api.Usuarios.dtos.DadosRetornoBarbeiro;
 import com.barbersync.barbersync_api.Usuarios.dtos.DadosRetornoCliente;
 import com.barbersync.barbersync_api.Usuarios.repository.BarbeiroRepository;
 import com.barbersync.barbersync_api.Usuarios.services.BarbeiroService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,10 @@ public class BarbeiroController {
 
     @PostMapping
     @Transactional
+    @Operation(
+            summary = "Cadastro de um barbeiro do sistema",
+            description = "Endpoint POST para o cadastro de um admin do barbeiro no BarberSync, com dados de um usuário completo (nome, email, senha), complementados às informações do barbeiro (CPF e Telefone)."
+    )
     public ResponseEntity registrarBarbeiro(@RequestBody @Valid DadosCadastroBarbeiro dados, UriComponentsBuilder uriBuilder) throws Exception {
         var barbeiro = barbeiroService.cadastrarUsuarioBarbeiro(dados);
         var uri = uriBuilder.path("/barbeiros/{id}").buildAndExpand(barbeiro.getId()).toUri();
@@ -42,6 +47,10 @@ public class BarbeiroController {
 
     @DeleteMapping("/{id}")
     @Transactional
+    @Operation(
+            summary = "Exclusão de um barbeiro do sistema (apenas um ADMIN ou BARBEIRO pode realizar)",
+            description = "Endpoint DELETE para a exclusão (safe delete) de um administrador do sistema do BarberSync. Restringido a usuário BARBEIRO ou ADMIN."
+    )
     @SecurityRequirement(name = "bearer-key", scopes = { "BARBEIRO", "ADMIN" })
     @PreAuthorize("hasAnyAuthority('BARBEIRO', 'ADMIN')")
     public ResponseEntity excluirBarbeiro(@PathVariable Long id){
@@ -51,14 +60,21 @@ public class BarbeiroController {
     }
 
     @GetMapping
-    @SecurityRequirement(name = "bearer-key", scopes = { "BARBEIRO", "ADMIN" })
-    @PreAuthorize("hasAnyAuthority('BARBEIRO', 'ADMIN')")
+    @SecurityRequirement(name = "bearer-key")
+    @Operation(
+            summary = "Listagem de barbeiros do sistema",
+            description = "Endpoint GET para a listagem de todos os barbeiros ativos do sistema do BarberSync, com dados completos e protegidos."
+    )
     public Page<DadosRetornoBarbeiro> listarBarbeiros(@PageableDefault(size=10, sort="usuario.nome") Pageable paginacao){
         return repository.findAllByAtivo(paginacao).map(DadosRetornoBarbeiro::new);
     }
 
     @PutMapping
     @SecurityRequirement(name = "bearer-key", scopes = { "BARBEIRO", "ADMIN" })
+    @Operation(
+            summary = "Edição de um barbeiro do sistema (apenas ADMIN ou BARBEIRO)",
+            description = "Endpoint PUT para a edição de um barbeiro ativo no sistema, alternando seu dados cadastrados. Acesso restringido a BARBEIRO ou ADMIN autenticado."
+    )
     @PreAuthorize("hasAnyAuthority('BARBEIRO', 'ADMIN')")
     public ResponseEntity alterarBarbeiro(@RequestBody @Valid DadosAlteracaoBarbeiro dados) throws Exception {
         var barbeiro = barbeiroService.mudarBarbeiro(dados);
@@ -67,6 +83,10 @@ public class BarbeiroController {
 
     @GetMapping("/authenticate-me")
     @SecurityRequirement(name = "bearer-key", scopes = { "BARBEIRO", "ADMIN" })
+    @Operation(
+            summary = "Coleta de informações do barbeiro autenticado",
+            description = "Endpoint GET para a coleta de informaões sobre o barbeiro autenticado."
+    )
     @PreAuthorize("hasAnyAuthority('BARBEIRO', 'ADMIN')")
     public ResponseEntity autenticarBarbeiro(Authentication authentication){
         try {

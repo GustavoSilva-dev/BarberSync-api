@@ -5,6 +5,7 @@ import com.barbersync.barbersync_api.Usuarios.classes.Cliente;
 import com.barbersync.barbersync_api.Usuarios.dtos.*;
 import com.barbersync.barbersync_api.Usuarios.repository.AdminRepository;
 import com.barbersync.barbersync_api.Usuarios.services.AdminService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,10 @@ public class AdminController {
 
     @PostMapping
     @Transactional
+    @Operation(
+            summary = "Cadastro de um administrador do sistema (apenas outro ADMIN pode realizar)",
+            description = "Endpoint POST para o cadastro de um administrador do sistema do BarberSync, com dados de um usuário (nome, email, senha), CPF e status de ativação."
+    )
     @SecurityRequirement(name = "bearer-key", scopes = { "ADMIN" })
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity registrarAdmin(@RequestBody @Valid DadosCadastroAdmin dados, UriComponentsBuilder uriBuilder) throws Exception {
@@ -41,6 +46,10 @@ public class AdminController {
 
     @PutMapping
     @Transactional
+    @Operation(
+            summary = "Edição de um administrador do sistema (apenas outro ADMIN pode realizar)",
+            description = "Endpoint PUT para a edição de um administrador do sistema do BarberSync, com dados de alteração."
+    )
     @SecurityRequirement(name = "bearer-key", scopes = { "ADMIN" })
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity alterarAdmin(@RequestBody @Valid DadosAlteracaoAdmin dados) throws Exception {
@@ -51,6 +60,10 @@ public class AdminController {
 
     @DeleteMapping("/{id}")
     @Transactional
+    @Operation(
+            summary = "Exclusão de um administrador do sistema (apenas outro ADMIN pode realizar)",
+            description = "Endpoint DELETE para a exclusão (safe delete) de um administrador do sistema do BarberSync."
+    )
     @SecurityRequirement(name = "bearer-key", scopes = { "ADMIN" })
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity excluirBarbeiro(@PathVariable Long id) throws Exception {
@@ -60,6 +73,10 @@ public class AdminController {
     }
 
     @GetMapping
+    @Operation(
+            summary = "Listagem de administradores do sistema (apenas outro ADMIN pode realizar)",
+            description = "Endpoint GET para a listagem de administradores disponível no sistema."
+    )
     @SecurityRequirement(name = "bearer-key", scopes = { "ADMIN" })
     @PreAuthorize("hasAuthority('ADMIN')")
     public Page<DadosRetornoAdmin> listarAdmin(@PageableDefault(sort="usuario.nome", size=10) Pageable page){
@@ -67,6 +84,10 @@ public class AdminController {
     }
 
     @GetMapping("/authenticate-me")
+    @Operation(
+            summary = "Coleta de informações do admin autenticado",
+            description = "Endpoint GET para a coleta de informaões sobre o administrador autenticado."
+    )
     @SecurityRequirement(name = "bearer-key", scopes = { "ADMIN" })
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity autenticarAdmin(Authentication authentication){
