@@ -16,7 +16,7 @@ public record DadosCadastroServico(
         String descricao,
 
         @NotNull(message = "O campo de preço deve ser válido")
-        @Min(value = 1, message = "O preço não pode ser menor que 10 reais")
+        @Min(value = 10, message = "O preço não pode ser menor que 10 reais")
         @Max(value = 150, message = "O serviço não pode ser maior que 150 reais")
         BigDecimal preco,
 

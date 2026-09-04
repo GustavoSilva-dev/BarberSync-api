@@ -4,6 +4,7 @@ import com.barbersync.barbersync_api.Servicos.dtos.DadosAlterarServico;
 import com.barbersync.barbersync_api.Servicos.dtos.DadosCadastroServico;
 import com.barbersync.barbersync_api.Servicos.dtos.DadosDetalhamentoServico;
 import com.barbersync.barbersync_api.Servicos.services.ServicoService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,10 @@ public class ServicoController {
     private ServicoService servicoService;
 
     @GetMapping
+    @Operation(
+            summary = "Listagem de serviços cadastrados na barbearia.",
+            description = "Endpoint GET para listar serviços da barbearia, com nome, preço, descrição, duração e se está ativo."
+    )
     public Page<DadosDetalhamentoServico> listarServicos(@PageableDefault(size = 10, sort = "nome") Pageable paginacao) {
         return servicoService.listarServicosAtivos(paginacao)
                 .map(servico -> new DadosDetalhamentoServico(
@@ -37,6 +42,10 @@ public class ServicoController {
 
     @PostMapping
     @Transactional
+    @Operation(
+            summary = "Cadastro de serviços da barbearia (apenas BARBEIRO e ADMIN).",
+            description = "Endpoint POST para criar serviços da barbearia, com nome, preço, descrição e duração."
+    )
     @SecurityRequirement(name = "bearer-key", scopes = {"BARBEIRO", "ADMIN"})
     @PreAuthorize("hasAnyAuthority('BARBEIRO', 'ADMIN')")
     public ResponseEntity<DadosDetalhamentoServico> cadastrarServico(@RequestBody @Valid DadosCadastroServico dados, UriComponentsBuilder uriBuilder) {
@@ -56,6 +65,10 @@ public class ServicoController {
 
     @PutMapping("/{id}")
     @Transactional
+    @Operation(
+            summary = "Edição de serviços da barbearia (apenas BARBEIRO e ADMIN).",
+            description = "Endpoint PUT para editar serviços da barbearia, com nome, preço, descrição e duração."
+    )
     @SecurityRequirement(name = "bearer-key", scopes = {"BARBEIRO", "ADMIN"})
     @PreAuthorize("hasAnyAuthority('BARBEIRO', 'ADMIN')")
     public ResponseEntity<DadosDetalhamentoServico> alterarServico(@PathVariable Long id, @RequestBody @Valid DadosAlterarServico dados) {
@@ -74,6 +87,10 @@ public class ServicoController {
 
     @DeleteMapping("/{id}")
     @Transactional
+    @Operation(
+            summary = "Exclusão de serviços da barbearia (apenas BARBEIRO e ADMIN).",
+            description = "Endpoint DELETE para o safe delete serviços da barbearia, com alterando status de ativação para FALSE"
+    )
     @SecurityRequirement(name = "bearer-key", scopes = {"BARBEIRO", "ADMIN"})
     @PreAuthorize("hasAnyAuthority('BARBEIRO', 'ADMIN')")
     public ResponseEntity<Void> excluirServico(@PathVariable Long id) {

@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.web.client.HttpClientErrorException;
 
+import java.util.List;
+
 @RestControllerAdvice
 public class ExceptionClass {
 
@@ -26,8 +28,11 @@ public class ExceptionClass {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<DadosErro> handleValidation() {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new DadosErro("Erro de validação"));
+    public ResponseEntity<List<DadosErro>> handleValidation(MethodArgumentNotValidException ex) {
+        var erros = ex.getFieldErrors();
+
+        var respostas = erros.stream().map(erro -> new DadosErro(erro.getDefaultMessage())).toList();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(respostas);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
