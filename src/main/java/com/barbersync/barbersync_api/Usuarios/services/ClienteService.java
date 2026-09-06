@@ -5,8 +5,10 @@ import com.barbersync.barbersync_api.Usuarios.classes.Usuario;
 import com.barbersync.barbersync_api.Usuarios.dtos.DadosAlteracaoCliente;
 import com.barbersync.barbersync_api.Usuarios.dtos.DadosCadastroCliente;
 import com.barbersync.barbersync_api.Usuarios.dtos.Roles;
+import com.barbersync.barbersync_api.Usuarios.dtos.Status;
 import com.barbersync.barbersync_api.Usuarios.repository.ClienteRepository;
 import com.barbersync.barbersync_api.Usuarios.repository.UsuariosRepository;
+import com.barbersync.barbersync_api.infra.exception.ValidacaoException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -28,7 +30,6 @@ public class ClienteService {
     @Autowired
     private ClienteRepository clienteRepository;
 
-    @Transactional
     public Cliente cadastrarUsuarioCliente(DadosCadastroCliente dados) throws Exception {
         try {
             Usuario usuario = new Usuario();
@@ -83,5 +84,14 @@ public class ClienteService {
         } catch (Exception e) {
             throw new Exception("Dados incorretos - não foi possível alterar o usuário: " + e.getMessage());
         }
+    }
+
+    public void deletarUsuarioCliente(Long id) {
+        var cliente = clienteRepository.findById(id)
+                .orElseThrow(() -> new UsernameNotFoundException("Barbeiro não encontrado"));
+
+        cliente.setStatus(Status.DESATIVO);
+
+        clienteRepository.save(cliente);
     }
 }

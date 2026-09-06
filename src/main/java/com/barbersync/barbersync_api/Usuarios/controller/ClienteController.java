@@ -1,5 +1,6 @@
 package com.barbersync.barbersync_api.Usuarios.controller;
 
+import com.barbersync.barbersync_api.Usuarios.classes.Cliente;
 import com.barbersync.barbersync_api.Usuarios.dtos.DadosAlteracaoCliente;
 import com.barbersync.barbersync_api.Usuarios.dtos.DadosCadastroCliente;
 import com.barbersync.barbersync_api.Usuarios.dtos.DadosRetornoCliente;
@@ -13,9 +14,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import static org.springframework.security.authorization.AuthorityReactiveAuthorizationManager.hasAnyAuthority;
 
 @RestController
 @RequestMapping("/clientes")
@@ -58,7 +64,7 @@ public class ClienteController {
     )
     @SecurityRequirement(name = "bearer-key")
     public ResponseEntity deletarCliente(@PathVariable Long id){
-        repository.deleteById(id);
+        clienteService.deletarUsuarioCliente(id);
 
         return ResponseEntity.noContent().build();
     }
@@ -74,5 +80,22 @@ public class ClienteController {
         var cliente = clienteService.alterarUsuarioCliente(dados);
 
         return ResponseEntity.ok().body(new DadosRetornoCliente(cliente));
+    }
+
+    @GetMapping("/authenticate-me")
+    @Operation (
+            summary = "Retorno das informações do cliente autenticado",
+            description = "Endpoint POST para coletar as informações cadastrais do usuário 'cliente' autenticado no sistema do BarberSync."
+    )
+    @SecurityRequirement(name = "bearer-key", scopes = {"CLIENTE", "ADMIN"})
+    @PreAuthorize("hasAnyAuthority('CLIENTE', 'ADMIN')")
+    public ResponseEntity autenticarCliente(Authentication authentication){
+        try {
+            var cliente = (Cliente) repository.findByUsuarioEmail(authentication.getName());
+
+            return ResponseEntity.ok().body(new DadosRetornoCliente(cliente));
+        } catch (Exception e) {
+            throw new UsernameNotFoundException("Usuário não autenticado");
+        }
     }
 }
