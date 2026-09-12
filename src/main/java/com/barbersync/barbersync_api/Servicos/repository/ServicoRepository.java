@@ -1,6 +1,7 @@
 package com.barbersync.barbersync_api.Servicos.repository;
 
 import com.barbersync.barbersync_api.Servicos.classes.Servico;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

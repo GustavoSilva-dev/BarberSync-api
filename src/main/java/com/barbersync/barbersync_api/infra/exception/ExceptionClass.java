@@ -22,6 +22,11 @@ public class ExceptionClass {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new DadosErro("Requisição inválida."));
     }
 
+    @ExceptionHandler(ValidacaoException.class)
+    public ResponseEntity<DadosErro> handleValidacaoRequest(String message) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new DadosErro(message));
+    }
+
     @ExceptionHandler(TokenException.class)
     public ResponseEntity<DadosErro> handleToken(String message) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new DadosErro(message));

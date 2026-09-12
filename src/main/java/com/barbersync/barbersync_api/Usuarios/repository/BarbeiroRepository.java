@@ -1,6 +1,7 @@
 package com.barbersync.barbersync_api.Usuarios.repository;
 
 import com.barbersync.barbersync_api.Usuarios.classes.Barbeiro;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Range;
@@ -14,4 +15,7 @@ public interface BarbeiroRepository extends JpaRepository<Barbeiro, Long> {
     Page<Barbeiro> findAllByAtivo(Pageable paginacao);
 
     UserDetails findByUsuarioEmail(String email);
+
+    @Query("SELECT b FROM Barbeiro b WHERE b.status == 'ATIVO' LIMIT 1")
+    Barbeiro findByAtivo(@NotNull(message = "Associe o barbeiro ao agendamento") Long aLong);
 }
