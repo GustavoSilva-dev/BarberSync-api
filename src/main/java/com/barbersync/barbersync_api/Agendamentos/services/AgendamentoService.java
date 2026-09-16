@@ -12,6 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneOffset;
 import java.util.List;
 
 @Service
@@ -52,7 +55,9 @@ public class AgendamentoService {
         var cliente = clienteRepository.getReferenceById(dados.clienteId());
         var servico = servicoRepository.getReferenceById(dados.servicoId());
 
-        Agendamento agendamento = new Agendamento(null, dados.dataHoraInicio(), dados.statusAgendamento(), barbeiro, cliente, servico);
+        LocalDateTime finalTime = dados.dataHoraInicio().plusMinutes(servico.getDuracaoEmMinutos());
+
+        Agendamento agendamento = new Agendamento(null, dados.dataHoraInicio(), finalTime, dados.statusAgendamento(), barbeiro, cliente, servico);
 
         return agendamento;
     }

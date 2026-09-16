@@ -23,12 +23,17 @@ public class Agendamento {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_agendamento")
     private Long id;
 
     @Column(name = "data_hora_inicio")
     private LocalDateTime dataHoraInicio;
 
+    @Column(name = "data_hora_final")
+    private LocalDateTime dataHoraFinal;
+
     @Column(name = "status_agendamento")
+    @Enumerated(EnumType.STRING)
     private StatusAgendamento statusAgendamento;
 
     @ManyToOne

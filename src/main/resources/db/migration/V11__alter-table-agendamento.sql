@@ -1,0 +1,1 @@
+ALTER TABLE agendamentos ADD data_hora_final TIMESTAMP NOT NULL;

@@ -16,6 +16,6 @@ public interface BarbeiroRepository extends JpaRepository<Barbeiro, Long> {
 
     UserDetails findByUsuarioEmail(String email);
 
-    @Query("SELECT b FROM Barbeiro b WHERE b.status == 'ATIVO' LIMIT 1")
+    @Query("SELECT b FROM Barbeiro b WHERE b.status = 'ATIVO' LIMIT 1")
     Barbeiro findByAtivo(@NotNull(message = "Associe o barbeiro ao agendamento") Long aLong);
 }
