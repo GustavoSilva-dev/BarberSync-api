@@ -1,6 +1,7 @@
 package com.barbersync.barbersync_api.infra.exception;
 
 import com.barbersync.barbersync_api.Usuarios.dtos.DadosErro;
+import jakarta.persistence.EntityNotFoundException;
 import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +31,11 @@ public class ExceptionClass {
     @ExceptionHandler(TokenException.class)
     public ResponseEntity<DadosErro> handleToken(String message) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new DadosErro(message));
+    }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<DadosErro> handleEntityNotFound(String message) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new DadosErro(message));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

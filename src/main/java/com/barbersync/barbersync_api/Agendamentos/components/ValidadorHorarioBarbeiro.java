@@ -23,12 +23,12 @@ public class ValidadorHorarioBarbeiro implements ValidadorAgendamento {
     private BarbeiroRepository barbeiroRepository;
 
     @Override
-    public void validarAgendamento(DadosCadastroAgendamento dados) {
+    public void validarAgendamento(DadosCadastroAgendamento dados) throws ValidacaoException {
         var servico = servicoRepository.getReferenceById(dados.servicoId());
         LocalDateTime dataFinal = dados.dataHoraInicio().plusMinutes(servico.getDuracaoEmMinutos());
 
         try {
-            Boolean validar = agendamentoRepository.findByAgendamentoConflict(dados.barbeiroId(), dados.dataHoraInicio(), dataFinal);
+            Boolean validar = agendamentoRepository.findByAgendamentoBarbeiroConflict(dados.barbeiroId(), dados.dataHoraInicio(), dataFinal);
 
             if(validar) throw new ValidacaoException("Conflito de horários identificado, agende em outro momento!");
         } catch (ValidacaoException e){

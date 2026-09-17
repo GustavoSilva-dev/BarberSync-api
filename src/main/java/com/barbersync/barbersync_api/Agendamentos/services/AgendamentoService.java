@@ -9,6 +9,7 @@ import com.barbersync.barbersync_api.Usuarios.repository.BarbeiroRepository;
 import com.barbersync.barbersync_api.Usuarios.repository.ClienteRepository;
 import com.barbersync.barbersync_api.infra.exception.ValidacaoException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,23 +33,10 @@ public class AgendamentoService {
     @Autowired
     private AgendamentoRepository agendamentoRepository;
 
+    @Autowired
     private List<ValidadorAgendamento> validadores;
 
     public Agendamento validarDadosAgendamento(DadosCadastroAgendamento dados){
-        var horario = dados.dataHoraInicio();
-
-        if(!clienteRepository.existsById(dados.clienteId())){
-            throw new ValidacaoException("ID do Cliente não existe.");
-        }
-
-        if(!barbeiroRepository.existsById(dados.barbeiroId())){
-            throw new ValidacaoException("ID do Barbeiro não existe.");
-        }
-
-        if(!servicoRepository.existsById(dados.servicoId())){
-            throw new ValidacaoException("ID do Serviço não existe.");
-        }
-
         validadores.stream().forEach(validador -> validador.validarAgendamento(dados));
 
         var barbeiro = barbeiroRepository.getReferenceById(dados.barbeiroId());

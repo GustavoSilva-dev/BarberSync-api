@@ -51,9 +51,8 @@ public class ClienteController {
             summary = "Listagem de clientes do sistema",
             description = "Endpoint GET para a listagem de todos os clientes ativos do sistema do BarberSync, com dados completos (nome, email, etc)."
     )
-    @SecurityRequirement(name = "bearer-key")
     public Page<DadosRetornoCliente> listarClientes(@PageableDefault(size = 10, sort="usuario.nome") Pageable paginacao) {
-        return repository.findAll(paginacao).map(DadosRetornoCliente::new);
+        return repository.findAllByAtivo(paginacao).map(DadosRetornoCliente::new);
     }
 
     @DeleteMapping("/{id}")

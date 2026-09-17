@@ -15,5 +15,5 @@ public interface AgendamentoRepository extends JpaRepository<Agendamento, Long> 
     Object findAllByDataHoraInicioNotIsEqual(LocalDateTime horario);
 
     @Query("SELECT COUNT(a) > 0 FROM Agendamento a WHERE a.barbeiro.id = :barbeiroId AND a.statusAgendamento != 'CANCELADO' AND a.dataHoraInicio < :dataFinal AND a.dataHoraFinal > :dataInicio")
-    Boolean findByAgendamentoConflict(Long barbeiroId, LocalDateTime dataInicio, LocalDateTime dataFinal);
+    Boolean findByAgendamentoBarbeiroConflict(Long barbeiroId, LocalDateTime dataInicio, LocalDateTime dataFinal);
 }

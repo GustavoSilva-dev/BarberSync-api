@@ -60,7 +60,6 @@ public class BarbeiroController {
     }
 
     @GetMapping
-    @SecurityRequirement(name = "bearer-key")
     @Operation(
             summary = "Listagem de barbeiros do sistema",
             description = "Endpoint GET para a listagem de todos os barbeiros ativos do sistema do BarberSync, com dados completos e protegidos."
