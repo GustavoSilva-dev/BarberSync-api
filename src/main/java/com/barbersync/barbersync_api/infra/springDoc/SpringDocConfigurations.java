@@ -19,7 +19,7 @@ public class SpringDocConfigurations {
                 .info(new Info()
                         .title("BarberSync API")
                         .version("0.0.12")
-                        .description("API/Backend do projeto BarberSync, plataforma SaaS de controle e gestão de uma barbearia, com fluxo de agendamentos, controle de clientes e serviços e gestão financeira.")
+                        .description("API/Backend do projeto BarberSync, plataforma SaaS de controle e gestão de uma barbearia, com fluxo de agendamentos, controle de clientes e serviços e gestão financeira. \nRegra de Funcionamento: A barbearia funciona das 08h até as 20h")
                 );
     }
 }

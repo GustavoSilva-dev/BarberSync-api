@@ -3,6 +3,7 @@ package com.barbersync.barbersync_api.Agendamentos.controller;
 import com.barbersync.barbersync_api.Agendamentos.dtos.DadosCadastroAgendamento;
 import com.barbersync.barbersync_api.Agendamentos.repository.AgendamentoRepository;
 import com.barbersync.barbersync_api.Agendamentos.services.AgendamentoService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,10 @@ public class AgendamentoController {
     private AgendamentoRepository repository;
 
     @PostMapping
+    @Operation(
+            summary = "Criar novo AGENDAMENTO",
+            description = "Endpoint POST para criar novos agendamentos, com validadores de negócio."
+    )
     @Transactional
     public ResponseEntity cadastrarAgendamento(@RequestBody @Valid DadosCadastroAgendamento dados){
         var agendamento = service.validarDadosAgendamento(dados);

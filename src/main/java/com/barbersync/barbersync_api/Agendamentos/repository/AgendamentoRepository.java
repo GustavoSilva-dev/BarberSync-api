@@ -8,12 +8,13 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 public interface AgendamentoRepository extends JpaRepository<Agendamento, Long> {
 
-    @Query("SELECT a FROM Agendamento a WHERE a.dataHoraInicio = :horario")
-    Object findAllByDataHoraInicioNotIsEqual(LocalDateTime horario);
-
     @Query("SELECT COUNT(a) > 0 FROM Agendamento a WHERE a.barbeiro.id = :barbeiroId AND a.statusAgendamento != 'CANCELADO' AND a.dataHoraInicio < :dataFinal AND a.dataHoraFinal > :dataInicio")
     Boolean findByAgendamentoBarbeiroConflict(Long barbeiroId, LocalDateTime dataInicio, LocalDateTime dataFinal);
+
+    @Query("SELECT COUNT(a) > 0 FROM Agendamento a WHERE a.cliente.id = :clienteId AND a.statusAgendamento != 'CANCELADO' AND a.dataHoraInicio < :dataFinal AND a.dataHoraFinal > :dataInicio")
+    Boolean findByAgendamentoClienteConflict(Long clienteId, LocalDateTime dataInicio, LocalDateTime dataFinal);
 }
