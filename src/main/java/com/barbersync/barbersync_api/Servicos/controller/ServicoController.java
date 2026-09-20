@@ -2,7 +2,7 @@ package com.barbersync.barbersync_api.Servicos.controller;
 
 import com.barbersync.barbersync_api.Servicos.dtos.DadosAlterarServico;
 import com.barbersync.barbersync_api.Servicos.dtos.DadosCadastroServico;
-import com.barbersync.barbersync_api.Servicos.dtos.DadosDetalhamentoServico;
+import com.barbersync.barbersync_api.Servicos.dtos.DadosRetornoServico;
 import com.barbersync.barbersync_api.Servicos.services.ServicoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -29,9 +29,9 @@ public class ServicoController {
             summary = "Listagem de serviços cadastrados na barbearia.",
             description = "Endpoint GET para listar serviços da barbearia, com nome, preço, descrição, duração e se está ativo."
     )
-    public Page<DadosDetalhamentoServico> listarServicos(@PageableDefault(size = 10, sort = "nome") Pageable paginacao) {
+    public Page<DadosRetornoServico> listarServicos(@PageableDefault(size = 10, sort = "nome") Pageable paginacao) {
         return servicoService.listarServicosAtivos(paginacao)
-                .map(servico -> new DadosDetalhamentoServico(
+                .map(servico -> new DadosRetornoServico(
                         servico.getNome(),
                         servico.getDescricao(),
                         servico.getPreco(),
@@ -48,11 +48,11 @@ public class ServicoController {
     )
     @SecurityRequirement(name = "bearer-key", scopes = {"BARBEIRO", "ADMIN"})
     @PreAuthorize("hasAnyAuthority('BARBEIRO', 'ADMIN')")
-    public ResponseEntity<DadosDetalhamentoServico> cadastrarServico(@RequestBody @Valid DadosCadastroServico dados, UriComponentsBuilder uriBuilder) {
+    public ResponseEntity<DadosRetornoServico> cadastrarServico(@RequestBody @Valid DadosCadastroServico dados, UriComponentsBuilder uriBuilder) {
         var servico = servicoService.cadastrarServico(dados);
         var uri = uriBuilder.path("/servico/{id}").buildAndExpand(servico.getId()).toUri();
 
-        var detalhamento = new DadosDetalhamentoServico(
+        var detalhamento = new DadosRetornoServico(
                 servico.getNome(),
                 servico.getDescricao(),
                 servico.getPreco(),
@@ -71,10 +71,10 @@ public class ServicoController {
     )
     @SecurityRequirement(name = "bearer-key", scopes = {"BARBEIRO", "ADMIN"})
     @PreAuthorize("hasAnyAuthority('BARBEIRO', 'ADMIN')")
-    public ResponseEntity<DadosDetalhamentoServico> alterarServico(@PathVariable Long id, @RequestBody @Valid DadosAlterarServico dados) {
+    public ResponseEntity<DadosRetornoServico> alterarServico(@PathVariable Long id, @RequestBody @Valid DadosAlterarServico dados) {
         var servico = servicoService.alterarServico(id, dados);
 
-        var detalhamento = new DadosDetalhamentoServico(
+        var detalhamento = new DadosRetornoServico(
                 servico.getNome(),
                 servico.getDescricao(),
                 servico.getPreco(),

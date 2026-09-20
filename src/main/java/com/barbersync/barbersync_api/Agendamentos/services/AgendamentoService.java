@@ -3,19 +3,18 @@ package com.barbersync.barbersync_api.Agendamentos.services;
 import com.barbersync.barbersync_api.Agendamentos.classes.Agendamento;
 import com.barbersync.barbersync_api.Agendamentos.components.ValidadorAgendamento;
 import com.barbersync.barbersync_api.Agendamentos.dtos.DadosCadastroAgendamento;
+import com.barbersync.barbersync_api.Agendamentos.dtos.StatusAgendamento;
 import com.barbersync.barbersync_api.Agendamentos.repository.AgendamentoRepository;
 import com.barbersync.barbersync_api.Servicos.repository.ServicoRepository;
 import com.barbersync.barbersync_api.Usuarios.repository.BarbeiroRepository;
 import com.barbersync.barbersync_api.Usuarios.repository.ClienteRepository;
 import com.barbersync.barbersync_api.infra.exception.ValidacaoException;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZoneOffset;
 import java.util.List;
 
 @Service
@@ -36,6 +35,7 @@ public class AgendamentoService {
     @Autowired
     private List<ValidadorAgendamento> validadores;
 
+    @Transactional
     public Agendamento validarDadosAgendamento(DadosCadastroAgendamento dados){
         validadores.stream().forEach(validador -> validador.validarAgendamento(dados));
 
@@ -45,8 +45,23 @@ public class AgendamentoService {
 
         LocalDateTime finalTime = dados.dataHoraInicio().plusMinutes(servico.getDuracaoEmMinutos());
 
-        Agendamento agendamento = new Agendamento(null, dados.dataHoraInicio(), finalTime, dados.statusAgendamento(), barbeiro, cliente, servico);
+        Agendamento agendamento = new Agendamento(null, dados.dataHoraInicio(), finalTime, StatusAgendamento.AGENDADO, barbeiro, cliente, servico);
+
+        agendamentoRepository.save(agendamento);
 
         return agendamento;
+    }
+
+    @Transactional
+    public Agendamento validarAgendamentoConcluido(Long id) {
+        var agendamentoExistente = agendamentoRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Agendamento não encontrado"));
+
+        if(agendamentoExistente.getStatusAgendamento() != StatusAgendamento.AGENDADO) throw new ValidacaoException("Agendamento inválido para conclusão - Status inválido para alteração.");
+
+        agendamentoExistente.setStatusAgendamento(StatusAgendamento.CONCLUIDO);
+
+        agendamentoRepository.save(agendamentoExistente);
+
+        return agendamentoExistente;
     }
 }

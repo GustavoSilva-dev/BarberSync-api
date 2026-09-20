@@ -10,6 +10,7 @@ import com.barbersync.barbersync_api.Usuarios.repository.BarbeiroRepository;
 import com.barbersync.barbersync_api.Usuarios.services.BarbeiroService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -86,10 +87,11 @@ public class BarbeiroController {
             summary = "Coleta de informações do barbeiro autenticado",
             description = "Endpoint GET para a coleta de informaões sobre o barbeiro autenticado."
     )
-    @PreAuthorize("hasAnyAuthority('BARBEIRO', 'ADMIN')")
+    @PreAuthorize("hasAnyAuthority('BARBEIRO')")
     public ResponseEntity autenticarBarbeiro(Authentication authentication){
         try {
-            var barbeiro = (Barbeiro) repository.findByUsuarioEmail(authentication.getName());
+            var barbeiro = repository.findByUsuarioEmail(authentication.getName())
+                    .orElseThrow(() -> new EntityNotFoundException("Perfil de barbeiro não encontrado para este usuário."));
             return ResponseEntity.ok(new DadosRetornoBarbeiro(barbeiro));
         } catch (Exception e) {
             throw new RuntimeException();

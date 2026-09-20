@@ -1,9 +1,7 @@
 package com.barbersync.barbersync_api.Agendamentos.components;
 
 import com.barbersync.barbersync_api.Agendamentos.dtos.DadosCadastroAgendamento;
-import com.barbersync.barbersync_api.Servicos.classes.Servico;
 import com.barbersync.barbersync_api.Servicos.repository.ServicoRepository;
-import com.barbersync.barbersync_api.infra.exception.ValidacaoException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

@@ -7,6 +7,7 @@ import com.barbersync.barbersync_api.Usuarios.repository.AdminRepository;
 import com.barbersync.barbersync_api.Usuarios.services.AdminService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -92,7 +93,8 @@ public class AdminController {
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity autenticarAdmin(Authentication authentication){
         try {
-            var admin = (Admin) repository.findByUsuarioEmail(authentication.getName());
+            var admin = repository.findByUsuarioEmail(authentication.getName())
+                    .orElseThrow(() -> new EntityNotFoundException("Perfil de administrador não encontrado para este usuário."));
             return ResponseEntity.ok(new DadosRetornoAdmin(admin));
         } catch (Exception e) {
             throw new RuntimeException();

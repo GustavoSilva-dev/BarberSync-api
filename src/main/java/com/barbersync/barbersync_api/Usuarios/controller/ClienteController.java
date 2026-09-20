@@ -6,8 +6,10 @@ import com.barbersync.barbersync_api.Usuarios.dtos.DadosCadastroCliente;
 import com.barbersync.barbersync_api.Usuarios.dtos.DadosRetornoCliente;
 import com.barbersync.barbersync_api.Usuarios.repository.ClienteRepository;
 import com.barbersync.barbersync_api.Usuarios.services.ClienteService;
+import com.barbersync.barbersync_api.infra.exception.ValidacaoException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -87,10 +89,11 @@ public class ClienteController {
             description = "Endpoint POST para coletar as informações cadastrais do usuário 'cliente' autenticado no sistema do BarberSync."
     )
     @SecurityRequirement(name = "bearer-key", scopes = {"CLIENTE", "ADMIN"})
-    @PreAuthorize("hasAnyAuthority('CLIENTE', 'ADMIN')")
+    @PreAuthorize("hasAuthority('CLIENTE')")
     public ResponseEntity autenticarCliente(Authentication authentication){
         try {
-            var cliente = (Cliente) repository.findByUsuarioEmail(authentication.getName());
+            var cliente = repository.findByUsuarioEmail(authentication.getName())
+                    .orElseThrow(() -> new EntityNotFoundException("Perfil de cliente não encontrado para este usuário."));
 
             return ResponseEntity.ok().body(new DadosRetornoCliente(cliente));
         } catch (Exception e) {

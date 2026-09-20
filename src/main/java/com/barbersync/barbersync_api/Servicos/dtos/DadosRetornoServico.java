@@ -1,11 +1,8 @@
 package com.barbersync.barbersync_api.Servicos.dtos;
 
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-
 import java.math.BigDecimal;
 
-public record DadosDetalhamentoServico(
+public record DadosRetornoServico(
         String nome,
         String descricao,
         BigDecimal preco,

@@ -3,7 +3,6 @@ package com.barbersync.barbersync_api.Agendamentos.components;
 import com.barbersync.barbersync_api.Agendamentos.dtos.DadosCadastroAgendamento;
 import com.barbersync.barbersync_api.Agendamentos.repository.AgendamentoRepository;
 import com.barbersync.barbersync_api.Servicos.repository.ServicoRepository;
-import com.barbersync.barbersync_api.Usuarios.repository.BarbeiroRepository;
 import com.barbersync.barbersync_api.infra.exception.ValidacaoException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
