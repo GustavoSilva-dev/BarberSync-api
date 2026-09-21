@@ -51,6 +51,9 @@ public class SecurityConfigurations {
                     .requestMatchers(HttpMethod.DELETE, "/clientes/**").hasAnyAuthority("CLIENTE", "ADMIN")
                     .requestMatchers(HttpMethod.DELETE, "/servico/**").hasAnyAuthority("BARBEIRO", "ADMIN")
                     .requestMatchers(HttpMethod.DELETE, "/admins/**").hasAuthority("ADMIN")
+                    .requestMatchers(HttpMethod.PATCH, "/agendamentos/concluir/**").hasAnyAuthority("ADMIN", "BARBEIRO", "CLIENTE")
+                    .requestMatchers(HttpMethod.PATCH, "/agendamentos/cancelar/**").hasAnyAuthority("ADMIN", "BARBEIRO", "CLIENTE")
+                    .requestMatchers(HttpMethod.DELETE, "/agendamentos/**").hasAnyAuthority("ADMIN", "BARBEIRO")
                     .anyRequest().permitAll())
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
