@@ -13,6 +13,7 @@ import com.barbersync.barbersync_api.Usuarios.services.AdminService;
 import com.barbersync.barbersync_api.infra.exception.ValidacaoException;
 import com.barbersync.barbersync_api.infra.security.TokenService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +36,15 @@ public class AutenticacaoController {
     @Autowired
     private AdminService adminService;
 
+    @Autowired
+    private ClienteRepository clienteRepository;
+
+    @Autowired
+    private BarbeiroRepository barbeiroRepository;
+
+    @Autowired
+    private AdminRepository adminRepository;
+
     @PostMapping("/cliente")
     @Operation(
             summary = "Autenticar usuário CLIENTE",
@@ -42,11 +52,15 @@ public class AutenticacaoController {
     )
     public ResponseEntity autenticarCliente(@Valid DadosAutenticarClienteBarbeiro dados){
         try {
-            var token = new UsernamePasswordAuthenticationToken(dados.email(), dados.senha());
-            var autenticacao = authenticationManager.authenticate(token);
-            var tokenJWT = tokenService.gerarToken((Cliente) autenticacao.getPrincipal());
+            var cliente = clienteRepository.findByUsuarioEmail(dados.email());
 
-            return ResponseEntity.ok(new DadosRetornoAutenticacao(tokenJWT));
+            if(cliente.isPresent()){
+                var token = new UsernamePasswordAuthenticationToken(dados.email(), dados.senha());
+                var autenticacao = authenticationManager.authenticate(token);
+                var tokenJWT = tokenService.gerarToken((Cliente) autenticacao.getPrincipal());
+
+                return ResponseEntity.ok(new DadosRetornoAutenticacao(tokenJWT));
+            } else throw new EntityNotFoundException("Perfil de cliente não encontrado para este usuário.");
         } catch (Exception e) {
             e.getStackTrace();
             return ResponseEntity.status(401).body("Falha na autenticação: " + e.getMessage());
@@ -60,11 +74,15 @@ public class AutenticacaoController {
     )
     public ResponseEntity autenticarBarbeiro(@Valid DadosAutenticarClienteBarbeiro dados){
         try {
-            var token = new UsernamePasswordAuthenticationToken(dados.email(), dados.senha());
-            var autenticacao = authenticationManager.authenticate(token);
-            var tokenJWT = tokenService.gerarToken((Barbeiro) autenticacao.getPrincipal());
+            var barbeiro = barbeiroRepository.findByUsuarioEmail(dados.email());
 
-            return ResponseEntity.ok(new DadosRetornoAutenticacao(tokenJWT));
+            if(barbeiro.isPresent()){
+                var token = new UsernamePasswordAuthenticationToken(dados.email(), dados.senha());
+                var autenticacao = authenticationManager.authenticate(token);
+                var tokenJWT = tokenService.gerarToken((Barbeiro) autenticacao.getPrincipal());
+
+                return ResponseEntity.ok(new DadosRetornoAutenticacao(tokenJWT));
+            } else throw new EntityNotFoundException("Perfil de barbeiro não encontrado para este usuário.");
         } catch (Exception e) {
             e.getStackTrace();
             return ResponseEntity.status(401).body("Falha na autenticação: " + e.getMessage());
@@ -79,17 +97,21 @@ public class AutenticacaoController {
     )
     public ResponseEntity autenticarAdmin(@Valid DadosAutenticarAdmin dados){
         try {
-            boolean validador = adminService.validarKey(dados.adminKey());
+            var admin = adminRepository.findByUsuarioEmail(dados.email());
 
-            if(validador) {
-                var token = new UsernamePasswordAuthenticationToken(dados.email(), dados.senha());
-                var autenticacao = authenticationManager.authenticate(token);
-                var tokenJWT = tokenService.gerarToken((Admin) autenticacao.getPrincipal());
+            if(admin.isPresent()){
+                boolean validador = adminService.validarKey(dados.adminKey());
 
-                return ResponseEntity.ok(new DadosRetornoAutenticacao(tokenJWT));
-            } else {
-                throw new ValidacaoException("Chave de admin inválida.");
-            }
+                if(validador) {
+                    var token = new UsernamePasswordAuthenticationToken(dados.email(), dados.senha());
+                    var autenticacao = authenticationManager.authenticate(token);
+                    var tokenJWT = tokenService.gerarToken((Admin) autenticacao.getPrincipal());
+
+                    return ResponseEntity.ok(new DadosRetornoAutenticacao(tokenJWT));
+                } else {
+                    throw new ValidacaoException("Chave de admin inválida.");
+                }
+            } else throw new EntityNotFoundException("Perfil de cliente não encontrado para este usuário.");
         } catch (Exception e) {
             e.getStackTrace();
             return ResponseEntity.status(401).body("Falha na autenticação: " + e.getMessage());

@@ -34,6 +34,9 @@ public class SecurityConfigurations {
 
                 .authorizeHttpRequests(req ->
                     req.requestMatchers(HttpMethod.POST, "/auth/**").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/clientes/authenticate-me").hasAnyAuthority("ADMIN", "CLIENTE")
+                    .requestMatchers(HttpMethod.POST, "/barbeiros/authenticate-me").hasAnyAuthority("ADMIN", "BARBEIRO")
+                    .requestMatchers(HttpMethod.POST, "/admins/authenticate-me").hasAuthority("ADMIN")
                     .requestMatchers(HttpMethod.POST, "/clientes").permitAll()
                     .requestMatchers(HttpMethod.POST, "/barbeiros").permitAll()
                     .requestMatchers(HttpMethod.POST, "/admins").hasAuthority("ADMIN")

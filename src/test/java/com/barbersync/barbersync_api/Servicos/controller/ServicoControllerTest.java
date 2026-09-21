@@ -3,7 +3,7 @@ package com.barbersync.barbersync_api.Servicos.controller;
 import com.barbersync.barbersync_api.Servicos.classes.Servico;
 import com.barbersync.barbersync_api.Servicos.dtos.DadosAlterarServico;
 import com.barbersync.barbersync_api.Servicos.dtos.DadosCadastroServico;
-import com.barbersync.barbersync_api.Servicos.dtos.DadosDetalhamentoServico;
+import com.barbersync.barbersync_api.Servicos.dtos.DadosRetornoServico;
 import com.barbersync.barbersync_api.Servicos.repository.ServicoRepository;
 import com.barbersync.barbersync_api.Servicos.services.ServicoService;
 import org.junit.jupiter.api.DisplayName;
@@ -47,7 +47,7 @@ class ServicoControllerTest {
     private JacksonTester<DadosCadastroServico> cadastroServicoJacksonTester;
 
     @Autowired
-    private JacksonTester<DadosDetalhamentoServico> detalhamentoServicoJacksonTester;
+    private JacksonTester<DadosRetornoServico> detalhamentoServicoJacksonTester;
 
     @Autowired
     private JacksonTester<DadosAlterarServico> alterarServicoJacksonTester;

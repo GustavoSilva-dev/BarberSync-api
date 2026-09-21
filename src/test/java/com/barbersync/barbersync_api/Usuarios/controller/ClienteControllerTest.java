@@ -64,7 +64,7 @@ class ClienteControllerTest {
         );
 
         var usuarioTeste = new Usuario(1L, dados.nome(), dados.email(), dados.senha(), Roles.CLIENTE);
-        var clienteTeste = new Cliente(1L, dados.telefone(), usuarioTeste);
+        var clienteTeste = new Cliente(1L, dados.telefone(), Status.ATIVO, usuarioTeste);
 
         var jsonBody = cadastroClienteJacksonTester.write(dados).getJson();
 
@@ -133,7 +133,7 @@ class ClienteControllerTest {
         );
 
         var usuarioTeste = new Usuario(1L, dados.nome(), dados.email(), "senha123", Roles.CLIENTE);
-        var clienteTeste = new Cliente(1L, dados.telefone(), usuarioTeste);
+        var clienteTeste = new Cliente(1L, dados.telefone(), Status.ATIVO, usuarioTeste);
 
         var jsonBody = alteracaoClienteJacksonTester.write(dados).getJson();
 
@@ -186,7 +186,7 @@ class ClienteControllerTest {
     void listarClientes_cenario1() throws Exception {
         // Given
         var usuarioTeste = new Usuario(1L, "Maria Cliente", "maria@cliente.com", "senha123", Roles.CLIENTE);
-        var clienteTeste = new Cliente(1L, "11999998888", usuarioTeste);
+        var clienteTeste = new Cliente(1L, "11999998888", Status.ATIVO, usuarioTeste);
 
         List<Cliente> clientes = List.of(clienteTeste);
         Page<Cliente> page = new PageImpl<>(clientes, PageRequest.of(0, 10), 1);

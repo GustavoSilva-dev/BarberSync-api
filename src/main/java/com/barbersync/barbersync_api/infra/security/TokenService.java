@@ -75,7 +75,6 @@ public class TokenService {
     }
 
     public String coletarSubject(String token) {
-            DecodedJWT decodedJWT;
             Algorithm algorithm = Algorithm.HMAC256(secret);
             return JWT.require(algorithm)
                     .withIssuer("barbersync-system")

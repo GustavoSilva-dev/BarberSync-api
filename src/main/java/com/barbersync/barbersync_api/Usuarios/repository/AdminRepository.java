@@ -9,8 +9,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Optional;
+
 public interface AdminRepository extends JpaRepository<Admin, Long> {
-    UserDetails findByUsuarioEmail(String subject);
+    Optional<Admin> findByUsuarioEmail(String subject);
 
     @Query("SELECT COUNT(a) FROM Admin a WHERE a.status = 'ATIVO'")
     Long countAllByAtivo();
@@ -19,4 +21,7 @@ public interface AdminRepository extends JpaRepository<Admin, Long> {
     Page<Admin> findAllbyAtivo(Pageable page);
 
     Admin findByAdminKey(String adminKey);
+
+    @Query("SELECT a FROM Admin a WHERE a.usuario.email = :subject LIMIT 1")
+    UserDetails findBySubject(String subject);
 }

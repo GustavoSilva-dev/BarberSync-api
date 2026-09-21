@@ -1,5 +1,6 @@
 package com.barbersync.barbersync_api.Usuarios.classes;
 
+import com.barbersync.barbersync_api.Usuarios.dtos.Status;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,6 +27,9 @@ public class Cliente implements UserDetails {
     private Long id;
 
     private String telefone;
+
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
     @OneToOne
     @JoinColumn(name = "usuario_id")
