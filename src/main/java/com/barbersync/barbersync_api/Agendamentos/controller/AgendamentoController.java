@@ -42,32 +42,7 @@ public class AgendamentoController {
         var agendamento = service.validarDadosAgendamento(dados);
         var uri = uriBuilder.path("/agendamentos/{id}").buildAndExpand(agendamento.getId()).toUri();
 
-        return ResponseEntity.created(uri).body(
-                new DadosRetornoAgendamento(
-                        agendamento.getDataHoraInicio(),
-                        agendamento.getDataHoraFinal(),
-                        new DadosRetornoCliente(
-                                agendamento.getCliente().getUsuario().getNome(),
-                                agendamento.getCliente().getUsuario().getEmail(),
-                                agendamento.getCliente().getTelefone(),
-                                agendamento.getCliente().getUsuario().getRole()
-                        ),
-                        new DadosRetornoBarbeiro(
-                                agendamento.getBarbeiro().getUsuario().getNome(),
-                                agendamento.getBarbeiro().getUsuario().getEmail(),
-                                agendamento.getBarbeiro().getTelefone(),
-                                agendamento.getBarbeiro().getCpf(),
-                                agendamento.getBarbeiro().getUsuario().getRole()
-                        ),
-                        new DadosRetornoServico(
-                                agendamento.getServico().getNome(),
-                                agendamento.getServico().getDescricao(),
-                                agendamento.getServico().getPreco(),
-                                agendamento.getServico().getDuracaoEmMinutos(),
-                                agendamento.getServico().getAtivo()
-                        )
-                )
-        );
+        return ResponseEntity.created(uri).body(new DadosRetornoAgendamento(agendamento));
     }
 
     @PostMapping("/client-side")
@@ -75,8 +50,8 @@ public class AgendamentoController {
             summary = "Criar novo AGENDAMENTO - Feito por CLIENTE",
             description = "Endpoint POST para criar novos agendamentos, realizado pelo CLIENTE logado, coletando ID pelo Spring Security."
     )
-    @SecurityRequirement(name = "bearer-key", scopes = {"ADMIN", "BARBEIRO"})
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'BARBEIRO')")
+    @SecurityRequirement(name = "bearer-key", scopes = {"CLIENTE"})
+    @PreAuthorize("hasAuthority('CLIENTE')")
     @Transactional
     public ResponseEntity cadastrarAgendamentoCliente(@RequestBody @Valid AgendamentoClientSide dados, @AuthenticationPrincipal Cliente clienteAutenticado, UriComponentsBuilder uriBuilder){
 
@@ -90,63 +65,47 @@ public class AgendamentoController {
         var agendamento = service.validarDadosAgendamento(dadosCadastro);
         var uri = uriBuilder.path("/agendamentos/{id}").buildAndExpand(agendamento.getId()).toUri();
 
-        return ResponseEntity.created(uri).body(
-                new DadosRetornoAgendamento(
-                        agendamento.getDataHoraInicio(),
-                        agendamento.getDataHoraFinal(),
-                        new DadosRetornoCliente(
-                                agendamento.getCliente().getUsuario().getNome(),
-                                agendamento.getCliente().getUsuario().getEmail(),
-                                agendamento.getCliente().getTelefone(),
-                                agendamento.getCliente().getUsuario().getRole()
-                        ),
-                        new DadosRetornoBarbeiro(
-                                agendamento.getBarbeiro().getUsuario().getNome(),
-                                agendamento.getBarbeiro().getUsuario().getEmail(),
-                                agendamento.getBarbeiro().getTelefone(),
-                                agendamento.getBarbeiro().getCpf(),
-                                agendamento.getBarbeiro().getUsuario().getRole()
-                        ),
-                        new DadosRetornoServico(
-                                agendamento.getServico().getNome(),
-                                agendamento.getServico().getDescricao(),
-                                agendamento.getServico().getPreco(),
-                                agendamento.getServico().getDuracaoEmMinutos(),
-                                agendamento.getServico().getAtivo()
-                        )
-                )
-        );
+        return ResponseEntity.created(uri).body(new DadosRetornoAgendamento(agendamento));
     }
 
     @PatchMapping("/concluir/{id}")
+    @Operation(
+            summary = "Concluir AGENDAMENTO",
+            description = "Endpoint PATCH para concluir um agendamento. Disponível para todos os usuários autenticados."
+    )
+    @SecurityRequirement(name = "bearer-key")
+    @PreAuthorize("isAuthenticated()")
     @Transactional
     public ResponseEntity alterarAgendamentoConcluido(@PathVariable Long id){
         var agendamentoExistente = service.validarAgendamentoConcluido(id);
-        var dadosRetorno = new DadosRetornoAgendamento(
-                agendamentoExistente.getDataHoraInicio(),
-                agendamentoExistente.getDataHoraFinal(),
-                new DadosRetornoCliente(
-                        agendamentoExistente.getCliente().getUsuario().getNome(),
-                        agendamentoExistente.getCliente().getUsuario().getEmail(),
-                        agendamentoExistente.getCliente().getTelefone(),
-                        agendamentoExistente.getCliente().getUsuario().getRole()
-                ),
-                new DadosRetornoBarbeiro(
-                        agendamentoExistente.getBarbeiro().getUsuario().getNome(),
-                        agendamentoExistente.getBarbeiro().getUsuario().getEmail(),
-                        agendamentoExistente.getBarbeiro().getTelefone(),
-                        agendamentoExistente.getBarbeiro().getCpf(),
-                        agendamentoExistente.getBarbeiro().getUsuario().getRole()
-                ),
-                new DadosRetornoServico(
-                        agendamentoExistente.getServico().getNome(),
-                        agendamentoExistente.getServico().getDescricao(),
-                        agendamentoExistente.getServico().getPreco(),
-                        agendamentoExistente.getServico().getDuracaoEmMinutos(),
-                        agendamentoExistente.getServico().getAtivo()
-                )
-        );
 
-        return ResponseEntity.ok().body(dadosRetorno);
+        return ResponseEntity.ok().body(new DadosRetornoAgendamento(agendamentoExistente));
     }
-}
+
+    @PatchMapping("/cancelar/{id}")
+    @Operation(
+            summary = "Cancelar AGENDAMENTO",
+            description = "Endpoint PATCH para cancelar um agendamento. Disponível para todos os usuários autenticados, com restrição de antecedência de 30 minutos para clientes."
+    )
+    @SecurityRequirement(name = "bearer-key")
+    @PreAuthorize("isAuthenticated()")
+    @Transactional
+    public ResponseEntity cancelarAgendamento(@PathVariable Long id, @AuthenticationPrincipal Usuario usuarioAutenticado) {
+        var agendamento = service.cancelarAgendamento(id, usuarioAutenticado);
+        return ResponseEntity.ok().body(new DadosRetornoAgendamento(agendamento));
+    }
+
+    @DeleteMapping("/{id}")
+    @Operation(
+            summary = "Excluir AGENDAMENTO",
+            description = "Endpoint DELETE para excluir um agendamento. Disponível apenas para BARBEIRO ou ADMIN."
+    )
+    @SecurityRequirement(name = "bearer-key", scopes = {"BARBEIRO", "ADMIN"})
+    @PreAuthorize("hasAnyAuthority('BARBEIRO', 'ADMIN')")
+    @Transactional
+    public ResponseEntity excluirAgendamento(@PathVariable Long id) {
+        service.excluirAgendamento(id);
+        return ResponseEntity.noContent().build();
+    }
+    }
+

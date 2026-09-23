@@ -6,11 +6,15 @@ import com.barbersync.barbersync_api.Agendamentos.dtos.DadosCadastroAgendamento;
 import com.barbersync.barbersync_api.Agendamentos.dtos.StatusAgendamento;
 import com.barbersync.barbersync_api.Agendamentos.repository.AgendamentoRepository;
 import com.barbersync.barbersync_api.Servicos.repository.ServicoRepository;
+import com.barbersync.barbersync_api.Usuarios.classes.Cliente;
+import com.barbersync.barbersync_api.Usuarios.classes.Usuario;
 import com.barbersync.barbersync_api.Usuarios.repository.BarbeiroRepository;
 import com.barbersync.barbersync_api.Usuarios.repository.ClienteRepository;
 import com.barbersync.barbersync_api.infra.exception.ValidacaoException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -63,5 +67,42 @@ public class AgendamentoService {
         agendamentoRepository.save(agendamentoExistente);
 
         return agendamentoExistente;
+    }
+
+@Transactional
+public Agendamento cancelarAgendamento(Long id, Usuario usuarioAutenticado) {
+    var agendamento = agendamentoRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Agendamento não encontrado"));
+
+    if (agendamento.getStatusAgendamento() == StatusAgendamento.CONCLUIDO) {
+        throw new ValidacaoException("Agendamento não pode ser cancelado pois já está concluído.");
+    }
+
+    if(usuarioAutenticado.isCliente()){
+        Cliente clienteAutenticado = clienteRepository.findByUsuarioEmail(usuarioAutenticado.getEmail()).orElseThrow(() -> new UsernameNotFoundException("Perfil de cliente não encontrado."));
+
+        if (!agendamento.getCliente().getId().equals(clienteAutenticado.getId())) {
+            throw new ValidacaoException("ACESSO NEGADO: Você não pode cancelar o agendamento de outra pessoa.");
+        }
+
+        if (agendamento.getDataHoraInicio().isBefore(LocalDateTime.now().plusMinutes(30))) {
+            throw new ValidacaoException("PRAZO DE CANCELAMENTO EXPIRADO: Apenas agendamentos com mais de 30 minutos de antecedência podem ser cancelados. Contate a barbearia diretamente.");
+        }
+    }
+
+    agendamento.setStatusAgendamento(StatusAgendamento.CANCELADO);
+    agendamentoRepository.save(agendamento);
+
+    return agendamento;
+    }
+
+    @Transactional
+    public void excluirAgendamento(Long id) {
+        var agendamento = agendamentoRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Agendamento não encontrado"));
+
+        if (agendamento.getStatusAgendamento() == StatusAgendamento.CONCLUIDO) {
+            throw new ValidacaoException("Agendamento concluído não pode ser excluído.");
+        }
+
+        agendamentoRepository.delete(agendamento);
     }
 }

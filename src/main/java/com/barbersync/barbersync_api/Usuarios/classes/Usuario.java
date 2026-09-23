@@ -10,6 +10,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.management.relation.Role;
+
 @Entity
 @Table(name = "usuarios")
 @NoArgsConstructor
@@ -30,4 +32,16 @@ public class Usuario {
 
     @Enumerated(EnumType.STRING)
     private Roles role;
+
+    public boolean isCliente() {
+        return this.role == Roles.CLIENTE;
+    }
+
+    public boolean isBarbeiro() {
+        return this.role == Roles.BARBEIRO;
+    }
+
+    public boolean isAdmin() {
+        return this.role == Roles.ADMIN;
+    }
 }
