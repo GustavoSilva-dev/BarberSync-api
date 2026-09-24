@@ -47,9 +47,6 @@ class ServicoControllerTest {
     private JacksonTester<DadosCadastroServico> cadastroServicoJacksonTester;
 
     @Autowired
-    private JacksonTester<DadosRetornoServico> detalhamentoServicoJacksonTester;
-
-    @Autowired
     private JacksonTester<DadosAlterarServico> alterarServicoJacksonTester;
 
     @Test
