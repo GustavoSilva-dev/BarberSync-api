@@ -16,5 +16,5 @@ public interface AgendamentoRepository extends JpaRepository<Agendamento, Long> 
     @Query("SELECT COUNT(a) > 0 FROM Agendamento a WHERE a.cliente.id = :clienteId AND a.statusAgendamento != 'CANCELADO' AND a.dataHoraInicio < :dataFinal AND a.dataHoraFinal > :dataInicio")
     Boolean findByAgendamentoClienteConflict(Long clienteId, LocalDateTime dataInicio, LocalDateTime dataFinal);
 
-    Page<Agendamento> findAllbyPage(Pageable pageable);
+    Page<Agendamento> findAll(Pageable pageable);
 }

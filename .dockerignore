@@ -1,0 +1,11 @@
+.git
+.gitignore
+.gitattributes
+README.md
+*.md
+.ai
+.github
+.idea
+*.iml
+*.iws
+target

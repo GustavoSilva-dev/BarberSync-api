@@ -5,6 +5,8 @@ import com.barbersync.barbersync_api.Agendamentos.components.ValidadorAgendament
 import com.barbersync.barbersync_api.Agendamentos.dtos.DadosCadastroAgendamento;
 import com.barbersync.barbersync_api.Agendamentos.dtos.StatusAgendamento;
 import com.barbersync.barbersync_api.Agendamentos.repository.AgendamentoRepository;
+import com.barbersync.barbersync_api.Email.dtos.DadosEmail;
+import com.barbersync.barbersync_api.Email.services.EmailService;
 import com.barbersync.barbersync_api.Servicos.repository.ServicoRepository;
 import com.barbersync.barbersync_api.Usuarios.classes.Cliente;
 import com.barbersync.barbersync_api.Usuarios.classes.Usuario;
@@ -20,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.awt.print.Pageable;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -40,8 +43,13 @@ public class AgendamentoService {
     @Autowired
     private List<ValidadorAgendamento> validadores;
 
+    @Autowired
+    private EmailService emailService;
+
     @Transactional
     public Agendamento validarDadosAgendamento(DadosCadastroAgendamento dados){
+        DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+
         validadores.stream().forEach(validador -> validador.validarAgendamento(dados));
 
         var barbeiro = barbeiroRepository.getReferenceById(dados.barbeiroId());
@@ -53,6 +61,13 @@ public class AgendamentoService {
         Agendamento agendamento = new Agendamento(null, dados.dataHoraInicio(), finalTime, StatusAgendamento.AGENDADO, barbeiro, cliente, servico);
 
         agendamentoRepository.save(agendamento);
+
+        DadosEmail emailSucesso = new DadosEmail(
+                agendamento.getCliente().getUsuario().getEmail(),
+                "Agendamento realizado com sucesso!",
+                "Olá, " + agendamento.getCliente().getUsuario().getNome().toUpperCase() + "!\n Seu agendamento com o barbeiro " + agendamento.getBarbeiro().getUsuario().getNome().toUpperCase() + " foi confirmado! Segue abaixo as informações detalhadas: \n\nData e hora de início: " + formatador.format(agendamento.getDataHoraInicio()) + "\nData e hora estimada de finalização: " + formatador.format(agendamento.getDataHoraFinal()) + "\n\nLhe aguardamos até lá! \n\nAtenciosamente,\nBarberSync System."
+        );
+        emailService.sendEmail(emailSucesso);
 
         return agendamento;
     }

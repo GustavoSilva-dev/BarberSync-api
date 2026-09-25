@@ -44,7 +44,7 @@ public class AgendamentoController {
     @SecurityRequirement(name = "bearer-key")
     @PreAuthorize("isAuthenticated()")
     public Page<DadosRetornoAgendamento> listarAgendamentos(@PageableDefault(size = 10) Pageable page){
-        return repository.findAllbyPage(page).map(DadosRetornoAgendamento::new);
+        return repository.findAll(page).map(DadosRetornoAgendamento::new);
     }
 
     @PostMapping("/admin-side")
