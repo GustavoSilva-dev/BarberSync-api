@@ -15,6 +15,9 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -29,6 +32,20 @@ public class AgendamentoController {
 
     @Autowired
     private AgendamentoService service;
+
+    @Autowired
+    private AgendamentoRepository repository;
+
+    @GetMapping
+    @Operation(
+            summary = "Listar todos AGENDAMENTOS",
+            description = "Endpoint para listar todos os agendamentos existentes (cancelados, agendados e concluídos)"
+    )
+    @SecurityRequirement(name = "bearer-key")
+    @PreAuthorize("isAuthenticated()")
+    public Page<DadosRetornoAgendamento> listarAgendamentos(@PageableDefault(size = 10) Pageable page){
+        return repository.findAllbyPage(page).map(DadosRetornoAgendamento::new);
+    }
 
     @PostMapping("/admin-side")
     @Operation(
